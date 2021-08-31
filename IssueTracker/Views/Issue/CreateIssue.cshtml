@@ -1,0 +1,76 @@
+﻿@model IssueTracker.Models.IssueModel
+
+@{
+    ViewBag.Title = "CreateIssue";
+}
+
+<h2>CreateProject</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>IssueModel</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateTimeDeadline, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.DateTimeDeadline, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
+            @Html.ValidationMessageFor(model => model.DateTimeDeadline, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <select name="Priority">
+                <option value=" ">Select priority</option>
+                <option value="1">For later</option>
+                <option value="2">Not much</option>
+                <option value="3">Important</option>
+                <option value="4">ASAP</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Label, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <select name="Label">
+                <option value=" ">Select priority</option>
+                <option value="1">URGENT</option>
+                <option value="2">Front End</option>
+                <option value="3">Back End</option>
+                <option value="4">Bug</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.Label, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
