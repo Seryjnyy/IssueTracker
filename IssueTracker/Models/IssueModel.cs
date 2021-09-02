@@ -13,11 +13,15 @@ namespace IssueTracker.Models
         /// </summary>
         public string Creator { get; set; }
 
+        public string CreatorName { get; set; }
+
         /// <summary>
         /// Represents the user who the issue was assigned to.
         /// Can be null to represent that no one was assigned.
         /// </summary>
         public string Assignee { get; set; }
+
+        public string AssigneeName { get; set; }
 
         /// <summary>
         /// Represents the description of the issue.
@@ -50,5 +54,7 @@ namespace IssueTracker.Models
         /// used to sort issues.
         /// </summary>
         public int Priority { get; set; }
+
+        public int ProjectID { get; set; }
     }
 }

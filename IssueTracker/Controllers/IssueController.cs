@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using IssueTracker.Models;
 using IssueTrackerDataLibrary.BusinessLogic;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace IssueTracker.Controllers
 {
@@ -16,8 +17,10 @@ namespace IssueTracker.Controllers
         /// The method directs the user to the page containing
         /// a form to create a issue.
         /// </summary>
-        public ActionResult CreateIssue()
+
+        public ActionResult CreateIssue(int projectID)
         {
+            TempData["projectID"] = projectID;
             return View();
         }
 
@@ -42,11 +45,38 @@ namespace IssueTracker.Controllers
                     DateTime.Now,
                     model.DateTimeDeadline,
                     model.Label,
-                    model.Priority);
+                    model.Priority,
+                    (int) TempData["projectID"]);
                 return RedirectToAction("../Home/About");
             }
 
             return View();
+        }
+
+        public ActionResult ViewIssuesForProject(int projectID)
+        {
+            var data = IssueProcessor.ViewIssuesForProject(projectID);
+            List<IssueModel> issues = new List<IssueModel>();
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            foreach(var row in data)
+            {
+                var user = userManager.FindById(row.AuthorID);
+                IssueModel model = new IssueModel
+                {
+                    Creator = row.AuthorID,
+                    CreatorName = user.FirstName + " " + user.LastName,
+                    Assignee = row.AssigneeID,
+                    Description = row.Description,
+                    DateTimeCreated = row.DateTimeCreated,
+                    DateTimeDeadline = row.DateTimeDeadline,
+                    Label = row.Label,
+                    Priority = row.Priority
+                };
+                issues.Add(model);
+            }
+
+            return View(issues);
         }
     }
 }

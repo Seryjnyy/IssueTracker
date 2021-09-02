@@ -46,5 +46,7 @@ namespace IssueTrackerDataLibrary.Models
         /// used to sort issues.
         /// </summary>
         public int Priority { get; set; }
+
+        public int ProjectID { get; set; }
     }
 }

@@ -41,9 +41,9 @@
             @Html.DisplayFor(modelItem => item.DateTimeCreated)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new {item.ProjectID}, null ) |
+            @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new {item.ProjectID}, null) |
+            @Html.ActionLink("Delete", "ViewProjects", new { /* id=item.PrimaryKey */ })
         </td>
     </tr>
 }

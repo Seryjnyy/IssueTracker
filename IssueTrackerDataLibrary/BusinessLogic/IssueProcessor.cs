@@ -1,4 +1,5 @@
 ﻿using IssueTrackerDataLibrary.Models;
+using IssueTrackerDataLibrary.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +16,7 @@ namespace IssueTrackerDataLibrary.BusinessLogic
         /// The number of correctly inserted rows of data.
         /// </returns>
         public static int CreateIssue(string authorId, string assigneeId, string description,
-            DateTime dateTimeCreated, DateTime dateTimedeadline, int label, int priority)
+            DateTime dateTimeCreated, DateTime dateTimedeadline, int label, int priority, int projectId)
         {
             IssueModel data = new IssueModel
             {
@@ -25,33 +26,41 @@ namespace IssueTrackerDataLibrary.BusinessLogic
                 DateTimeCreated = dateTimeCreated,
                 DateTimeDeadline = dateTimedeadline,
                 Label = label,
-                Priority = priority
+                Priority = priority,
+                ProjectID = projectId
             };
 
             string sql;
             if((data.AssigneeID == null) && (data.DateTimeDeadline == null))
             {
-                sql = @"insert into dbo.Issues (AuthorID, Description, TimeCreated, Label, Priority)
-            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority);";
+                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, Label, Priority, ProjectID)
+            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority, @ProjectID);";
             }
             else if(data.DateTimeDeadline == null)
             {
-                sql = @"insert into dbo.Issues (AuthorID, Description, TimeCreated, Label, Priority, AssigneeID)
-            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority, @AssigneeID);";
+                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, Label, Priority, AssigneeID, ProjectID)
+            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority, @AssigneeID, @ProjectID);";
             }
             else if(data.AssigneeID == null)
             {
-                sql = @"insert into dbo.Issues (AuthorID, Description, TimeCreated, Deadline, Label, Priority)
-            values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority);";
+                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, DateTimeDeadline, Label, Priority, ProjectID)
+            values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority, @ProjectID);";
             }
             else
             {
-            sql = @"insert into dbo.Issues (AuthorID, Description, TimeCreated, Deadline, Label, Priority, AssigneeID)
-            values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority, @AssigneeID);";
+            sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, DateTimeDeadline, Label, Priority, AssigneeID, ProjectID)
+            values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority, @AssigneeID, @ProjectID);";
             }
 
 
-            return DataAccess.SqlDataAccess.SaveData(sql, data);
+            return SqlDataAccess.SaveData(sql, data);
+        }
+
+        public static List<IssueModel> ViewIssuesForProject(int projectID)
+        {
+            string sql = string.Format("select * from dbo.Issues where ProjectID = {0};", projectID);
+
+            return SqlDataAccess.LoadData<IssueModel>(sql);
         }
     }
 }

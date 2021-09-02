@@ -8,6 +8,7 @@ namespace IssueTracker.Models
 {
     public class ProjectModel
     {
+        public int ProjectID { get; set; }
         /// <summary>
         /// Represents the name of the project.
         /// </summary>
@@ -23,9 +24,6 @@ namespace IssueTracker.Models
         /// </summary>
         public string Creator { get; set; }
 
-        /// <summary>
-        /// Represents the name of the creator
-        /// </summary>
         public string CreatorName { get; set; }
 
         /// <summary>

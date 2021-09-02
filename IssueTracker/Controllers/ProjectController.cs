@@ -32,7 +32,8 @@ namespace IssueTracker.Controllers
                     Description = row.Description, 
                     Creator = row.UserID,
                     CreatorName = creator.FirstName + " " + creator.LastName,
-                    DateTimeCreated = row.DateTimeCreated 
+                    DateTimeCreated = row.DateTimeCreated,
+                    ProjectID = row.ProjectID
                 });
             }
 
