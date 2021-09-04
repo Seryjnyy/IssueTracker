@@ -21,6 +21,7 @@ namespace IssueTracker.Controllers
         public ActionResult CreateIssue(int projectID)
         {
             TempData["projectID"] = projectID;
+            ViewBag.ProjectID = projectID;
             return View();
         }
 
@@ -36,17 +37,22 @@ namespace IssueTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateIssue(IssueModel model)
         {
+            int projectID = (int)TempData["projectID"];
+
             if (ModelState.IsValid)
             {
+                DateTime dateTimeCreated = DateTime.Now;
                 int recordsCreated = IssueProcessor.CreateIssue(
                     User.Identity.GetUserId(),
                     model.Assignee,
                     model.Description,
-                    DateTime.Now,
+                    dateTimeCreated,
                     model.DateTimeDeadline,
                     model.Label,
                     model.Priority,
-                    (int) TempData["projectID"]);
+                    projectID);
+
+                recordsCreated = ActivityProcessor.CreateActivity(User.Identity.GetUserId(), projectID, dateTimeCreated, " created a new issue.");
                 return RedirectToAction("../Home/About");
             }
 
@@ -58,8 +64,9 @@ namespace IssueTracker.Controllers
             var data = IssueProcessor.ViewIssuesForProject(projectID);
             List<IssueModel> issues = new List<IssueModel>();
             ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            ViewBag.ProjectID = projectID;
 
-            foreach(var row in data)
+            foreach (var row in data)
             {
                 var user = userManager.FindById(row.AuthorID);
                 IssueModel model = new IssueModel
@@ -71,7 +78,8 @@ namespace IssueTracker.Controllers
                     DateTimeCreated = row.DateTimeCreated,
                     DateTimeDeadline = row.DateTimeDeadline,
                     Label = row.Label,
-                    Priority = row.Priority
+                    Priority = row.Priority,
+                    IssueID = row.IssueID
                 };
                 issues.Add(model);
             }

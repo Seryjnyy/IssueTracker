@@ -6,6 +6,7 @@ namespace IssueTrackerDataLibrary.Models
 {
     public class ProjectUserModel
     {
+        public int ProjectUserId { get; set; }
         /// <summary>
         /// Represents the ID of the project the user is on.
         /// </summary>

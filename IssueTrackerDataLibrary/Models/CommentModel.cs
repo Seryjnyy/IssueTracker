@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace IssueTracker.Models
+namespace IssueTrackerDataLibrary.Models
 {
     public class CommentModel
     {
@@ -23,7 +23,7 @@ namespace IssueTracker.Models
         /// </summary>
         public string AuthorID { get; set; }
 
-        public string AuthorName { get; set; }
+        public int IssueID { get; set; }
 
 
     }

@@ -30,27 +30,8 @@ namespace IssueTrackerDataLibrary.BusinessLogic
                 ProjectID = projectId
             };
 
-            string sql;
-            if((data.AssigneeID == null) && (data.DateTimeDeadline == null))
-            {
-                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, Label, Priority, ProjectID)
-            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority, @ProjectID);";
-            }
-            else if(data.DateTimeDeadline == null)
-            {
-                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, Label, Priority, AssigneeID, ProjectID)
-            values (@AuthorID, @Description, @DateTimeCreated, @Label, @Priority, @AssigneeID, @ProjectID);";
-            }
-            else if(data.AssigneeID == null)
-            {
-                sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, DateTimeDeadline, Label, Priority, ProjectID)
-            values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority, @ProjectID);";
-            }
-            else
-            {
-            sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, DateTimeDeadline, Label, Priority, AssigneeID, ProjectID)
+            string sql = @"insert into dbo.Issues (AuthorID, Description, DateTimeCreated, DateTimeDeadline, Label, Priority, AssigneeID, ProjectID)
             values (@AuthorID, @Description, @DateTimeCreated, @DateTimeDeadline, @Label, @Priority, @AssigneeID, @ProjectID);";
-            }
 
 
             return SqlDataAccess.SaveData(sql, data);
@@ -61,6 +42,14 @@ namespace IssueTrackerDataLibrary.BusinessLogic
             string sql = string.Format("select * from dbo.Issues where ProjectID = {0};", projectID);
 
             return SqlDataAccess.LoadData<IssueModel>(sql);
+        }
+
+        public static int FindProjectIDThroughIssueID(int issueID)
+        {
+            string sql = string.Format("select distinct ProjectID from dbo.Issues where IssueId = {0};", issueID);
+
+            return SqlDataAccess.LoadData<int>(sql)[0];
+ 
         }
     }
 }

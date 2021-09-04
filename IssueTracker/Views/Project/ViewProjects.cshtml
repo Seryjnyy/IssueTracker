@@ -7,7 +7,7 @@
 <h2>ViewProjects</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "CreateProject", "Project", null, null)
 </p>
 <table class="table">
     <tr>
@@ -41,9 +41,10 @@
             @Html.DisplayFor(modelItem => item.DateTimeCreated)
         </td>
         <td>
-            @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new {item.ProjectID}, null ) |
-            @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new {item.ProjectID}, null) |
-            @Html.ActionLink("Delete", "ViewProjects", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new { item.ProjectID }, null) |
+            @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new { item.ProjectID }, null) |
+            @Html.ActionLink("View members", "ViewProjectUsers", "ProjectUser", new { item.ProjectID }, null) |
+            @Html.ActionLink("A", "ViewActivityForProject", "Activity", new { item.ProjectID }, null)
         </td>
     </tr>
 }

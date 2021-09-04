@@ -8,13 +8,22 @@ namespace IssueTracker.Models
     public class ProjectUserModel
     {
         /// <summary>
-        /// Represents the user.
+        /// Represents the ID of the project the user is on.
         /// </summary>
-        public UserModel User { get; set; }
+        public int ProjectID { get; set; }
 
         /// <summary>
-        /// Represents the role of the user on the project.
+        /// Represents the ID of the user.
         /// </summary>
-        public string Role { get; set; }
+        public string UserID { get; set; }
+
+        /// <summary>
+        /// Represents the project role given to the user.
+        /// </summary>
+        public int Role { get; set; }
+
+        public string UserEmail { get; set; }
+
+        public string UserName { get; set; }
     }
 }

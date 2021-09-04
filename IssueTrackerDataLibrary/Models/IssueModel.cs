@@ -6,6 +6,7 @@ namespace IssueTrackerDataLibrary.Models
 {
     public class IssueModel
     {
+        public int IssueID { get; set; }
         /// <summary>
         /// Represents the user who created the issuse.
         /// </summary>

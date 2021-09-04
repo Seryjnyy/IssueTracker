@@ -1,0 +1,49 @@
+﻿@model IEnumerable<IssueTracker.Models.CommentModel>
+
+@{
+    ViewBag.Title = "ViewCommentsForIssue";
+}
+
+<h2>ViewCommentsForIssue</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateCommentForIssue", "Comment", new { ViewBag.IssueID }, null)
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateTimeCreated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuthorName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateTimeCreated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuthorName)
+        </td>
+        <td>
+@*            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "DeleteCommentFromIssue", "Comment", new { item. }, null)*@
+        </td>
+    </tr>
+}
+
+</table>
+
+<div>
+    @Html.ActionLink("Back to Issues", "ViewIssuesForProject", "Issue", new {ViewBag.ProjectID}, null)
+</div>

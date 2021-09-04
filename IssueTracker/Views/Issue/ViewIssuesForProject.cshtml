@@ -7,7 +7,7 @@
 <h2>ViewIssuesForProject</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "CreateIssue", "Issue", new {ViewBag.ProjectID}, null)
 </p>
 <table class="table">
     <tr>
@@ -35,7 +35,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.CreatorName)
@@ -59,11 +59,15 @@
             @Html.DisplayFor(modelItem => item.Priority)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Comments", "ViewCommentsForIssue","Comment", new { item.IssueID }, null) 
+            @* |           @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
         </td>
     </tr>
 }
 
 </table>
+
+<div>
+    @Html.ActionLink("Back to Projects", "ViewProjects", "Project", new {}, null)
+</div>

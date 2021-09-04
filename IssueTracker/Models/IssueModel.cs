@@ -8,6 +8,7 @@ namespace IssueTracker.Models
 {
     public class IssueModel
     {
+        public int IssueID { get; set; }
         /// <summary>
         /// Represents the user id of the creator.
         /// </summary>
