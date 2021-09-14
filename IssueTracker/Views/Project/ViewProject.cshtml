@@ -1,0 +1,165 @@
+﻿@model IssueTracker.Models.ProjectModel
+
+@{
+    ViewBag.Title = "ViewProject";
+}
+
+<h2>ViewProject</h2>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a href="#about" class="active"  data-toggle="tab">About</a>
+    </li>
+    <li class="nav-item">
+        <a href="#members" class="nav-link" data-toggle="tab">Members</a>
+    </li>
+    <li class="nav-item">
+        <a href="#issues" class="nav-link" data-toggle="tab">Issues</a>
+    </li>
+    <li class="nav-item">
+        <a href="#activity" class="nav-link" data-toggle="tab">Activity</a>
+    </li>
+</ul>
+
+<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+    <div class="tab-pane fade" id="about">
+        <div>
+            <h4>Project</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ProjectID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ProjectID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Creator)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Creator)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.CreatorName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.CreatorName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeCreated)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeCreated)
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="members">
+
+            @if (Model.IsCreator)
+            {
+                @Html.ActionLink("Manage members", "ManageMembers", "ProjectUser", new {projectID = Model.ProjectID }, null);
+            }
+
+        <div id="partialViewMembers"></div>
+    </div>
+    <div class="tab-pane fade" id="issues">
+        <div id="partialViewIssues"></div>
+    </div>
+    <div class="tab-pane fade" id="activity">
+        <div id="partialViewActivity"></div>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section Scripts{
+    <script type="text/jscript">
+           $(document).ready(function () {
+            var projectID = @ViewBag.projectID;
+            $.ajax({
+                url: '/ProjectUser/ViewUsers',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#partialViewMembers').html(result);
+                    $('#projectUserTable').DataTable({});
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+               $.ajax({
+                   url: '/Issue/ViewIssuesForProjectPartialView',
+                   data: {
+                       projectID: projectID
+                   },
+                   contentType: 'application/html; charset=utf-8',
+                   type: 'GET',
+                   dataType: 'html',
+                   success: function (result) {
+                       $('#partialViewIssues').html(result);
+                       $('#issueTable').DataTable({});
+                   },
+                   error: function () {
+                       alert(status);
+                   }
+               });
+
+               $.ajax({
+                   url: '/Activity/ViewActivityForProjectPartialView',
+                   data: {
+                       projectID: projectID
+                   },
+                   contentType: 'application/html; charset=utf-8',
+                   type: 'GET',
+                   dataType: 'html',
+                   success: function (result) {
+                       $('#partialViewActivity').html(result);
+                       $('#activityTable').DataTable({});
+                   },
+                   error: function () {
+                       alert(status);
+                   }
+               });
+
+               
+
+
+
+               
+        });
+    </script>
+
+}

@@ -1,0 +1,202 @@
+﻿@{
+    ViewBag.Title = "ViewProject";
+}
+<h2>ViewProject</h2>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        <a href="#members" class="nav-link" data-toggle="tab">Members</a>
+    </li>
+    <li class="nav-item">
+        <a href="#addMember" class="nav-link" data-toggle="tab">Add member</a>
+    </li>
+    <li class="nav-item">
+        <a href="#editRoles" class="nav-link" data-toggle="tab">Edit roles</a>
+    </li>
+
+</ul>
+
+<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+    <div class="tab-pane fade" id="members">
+        <div id="partialViewMembers"></div>
+    </div>
+    <div class="tab-pane fade" id="addMember">
+        <div id="addMemberForm">
+            @Html.Partial("AddProjectUserPartialView")
+        </div>
+    </div>
+    <div class="tab-pane fade" id="editRoles">
+        <div id="editRolesForm">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>ProjectUserModel</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    @*jquery multiselect*@
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="projectUsers">Select users </label>
+                        <select id="projectUsers" data-val="true"  data-val-required="Select a user." name="projectUsers" value="">
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="projectUsers" data-valmsg-replace="true"></span>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="roleSelect">Select role</label>
+                        <select class="form-control single-line" id="roleSelect" data-val="true" data-val-required="Select a role." name="roleSelect" value="">
+                            <option value=" ">Select priority</option>
+                            <option value="1">For later</option>
+                            <option value="2">Not much</option>
+                            <option value="3">Important</option>
+                            <option value="4">ASAP</option>
+                        </select>
+                        <span class="field-validation-valid text-danger" data-valmsg-for="roleSelect" data-valmsg-replace="true"></span>
+                    </div>
+
+                    @*    <div class="form-group">
+
+
+                    @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section Scripts{
+    @*Autocomplete stuff*@
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+
+    <script>
+        $(document).ready(function () {
+            var projectID = @ViewBag.projectID;
+
+            $("#members").addClass("active");
+            $("#members").addClass("in");
+@*            $('#projectUserTable').DataTable({
+                "ajax": {
+                    url: '/ProjectUser/FindUsersInProjectJson',
+                    timeout: 100,
+                    data: {
+                        projectID: projectID
+                    },
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        alert("hello")
+                    },
+                    error: function () {
+                        alert(status);
+                    }
+                }
+            });*@
+
+            // fetches project users and adds them to table
+            $.ajax({
+                url: '/ProjectUser/ViewUsers',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#partialViewMembers').html(result);
+                    $('#projectUserTable').DataTable({});
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+           @* // fetches partial view for adding user
+            $.ajax({
+                url: '/ProjectUser/AddProjectUserPartialView',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#addMemberForm').html(result);
+
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+            // fetches partial view for editing roles
+            $.ajax({
+                url: '/ProjectUser/EditProjectUserRolePartialView',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#editRolesForm').html(result);
+
+                },
+                error: function () {
+                    alert(status);
+                }
+            });*@
+
+            $.ajax({
+                url: '/ProjectUser/AllUsersEmailAndName',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    var userEmails = JSON.parse(result);
+
+
+                    console.log(result);
+                    $("#projectUsers").selectize({
+                        maxItems: null,
+                        labelField: "Email",
+                        valueField: "Email",
+                        options: userEmails
+                    });
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+
+
+        });
+
+    </script>
+
+}

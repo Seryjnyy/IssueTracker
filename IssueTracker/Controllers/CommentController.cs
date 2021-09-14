@@ -13,6 +13,11 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class CommentController : Controller
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="issueID"></param>
+        /// <returns></returns>
         public ActionResult ViewCommentsForIssue(int issueID)
         {
             var data = CommentProcessor.ViewCommentsForIssue(issueID);

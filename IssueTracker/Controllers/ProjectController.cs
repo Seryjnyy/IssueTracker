@@ -14,6 +14,48 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class ProjectController : Controller
     {
+        public ActionResult ViewProjectsTab()
+        {
+            var data = ProjectProcessor.ViewAllUserProjects(User.Identity.GetUserId());
+            List<ProjectModel> projects = new List<ProjectModel>();
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            foreach (var row in data)
+            {
+                var creator = userManager.FindById(row.UserID);
+                projects.Add(new ProjectModel
+                {
+                    Name = row.Name,
+                    Description = row.Description,
+                    Creator = row.UserID,
+                    CreatorName = creator.FirstName + " " + creator.LastName,
+                    DateTimeCreated = row.DateTimeCreated,
+                    ProjectID = row.ProjectID
+                });
+            }
+
+            return View(projects);
+        }
+        public ActionResult ViewProject(int projectID)
+        {
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var data = ProjectProcessor.ViewProject(projectID);
+            ViewBag.projectID = projectID;
+
+            var creator = userManager.FindById(data.UserID);
+            ProjectModel project = new ProjectModel
+            {
+                Name = data.Name,
+                Description = data.Description,
+                Creator = data.UserID,
+                CreatorName = creator.FirstName + " " + creator.LastName,
+                DateTimeCreated = data.DateTimeCreated,
+                ProjectID = data.ProjectID,
+                IsCreator = (data.UserID == User.Identity.GetUserId())
+            };
+            return View(project);
+        }
+
         /// <summary>
         /// Page to show the user all their projects.
         /// </summary>

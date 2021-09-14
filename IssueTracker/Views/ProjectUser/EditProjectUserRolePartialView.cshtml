@@ -1,0 +1,68 @@
+﻿
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ProjectUserModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @*jquery multiselect*@
+        <div class="form-group">
+            <label class="control-label col-md-2" for="projectUsers">Select users </label>
+            <select id="projectUsers" data-val="true" class="form-control single-line" data-val-required="Select a user." name="projectUsers" value="">
+                <option value=" ">Select priority</option>
+                <option value="1">For later</option>
+                <option value="2">Not much</option>
+                <option value="3">Important</option>
+                <option value="4">ASAP</option>
+            </select>
+            <span class="field-validation-valid text-danger" data-valmsg-for="projectUsers" data-valmsg-replace="true"></span>
+        </div>
+
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="roleSelect">Select role</label>
+            <select class="form-control single-line" id="roleSelect" data-val="true" data-val-required="Select a role." name="roleSelect" value="">
+                <option value=" ">Select priority</option>
+                <option value="1">For later</option>
+                <option value="2">Not much</option>
+                <option value="3">Important</option>
+                <option value="4">ASAP</option>
+            </select>
+            <span class="field-validation-valid text-danger" data-valmsg-for="roleSelect" data-valmsg-replace="true"></span>
+        </div>
+
+        @*    <div class="form-group">
+
+
+                @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+    <script>
+        $(document).ready({
+
+            });
+
+
+    </script>
+

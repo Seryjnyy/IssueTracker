@@ -4,49 +4,69 @@
     ViewBag.Title = "ViewProjects";
 }
 
+
 <h2>ViewProjects</h2>
+
 
 <p>
     @Html.ActionLink("Create New", "CreateProject", "Project", null, null)
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatorName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateTimeCreated)
-        </th>
-        <th></th>
-    </tr>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeCreated)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatorName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateTimeCreated)
-        </td>
-        <td>
-            @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new { item.ProjectID }, null) |
-            @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new { item.ProjectID }, null) |
-            @Html.ActionLink("View members", "ViewProjectUsers", "ProjectUser", new { item.ProjectID }, null) |
-            @Html.ActionLink("A", "ViewActivityForProject", "Activity", new { item.ProjectID }, null)
-        </td>
-    </tr>
-}
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeCreated)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "ViewProject", "Project", new { projectID = item.ProjectID }, null) |
+                    @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new { item.ProjectID }, null) |
+                    @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new { item.ProjectID }, null) |
+                    @Html.ActionLink("View members", "ViewProjectUsers", "ProjectUser", new { item.ProjectID }, null) |
+                    @Html.ActionLink("A", "ViewActivityForProject", "Activity", new { item.ProjectID }, null)
+                </td>
+            </tr>
 
+        }
+    </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable({
+                paging: true,
+                ordering: true
+            });
+        });
+    </script>
+
+}

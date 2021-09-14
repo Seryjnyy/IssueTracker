@@ -30,5 +30,12 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 
             return SqlDataAccess.SaveData(sql, data);
         }
+
+        public static int RemoveComment(int commentID)
+        {
+            string sql = string.Format("delete from dbo.Comment where CommentID = {0};", commentID);
+
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
     }
 }

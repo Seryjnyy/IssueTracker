@@ -8,10 +8,27 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 {
     public static class ProjectProcessor
     {
-/*        public static string GetFullNameOfID(string userID)
+        /*        public static string GetFullNameOfID(string userID)
+                {
+                    string sql = string.Format("select FirstName, LastName from dbo. where UserID = '{0}';", userID);
+                }*/
+        public static int UpdateName(int projectID, string newName)
         {
-            string sql = string.Format("select FirstName, LastName from dbo. where UserID = '{0}';", userID);
-        }*/
+            string sql = string.Format("update dbo.Project set Name = {0} where ProjectId = {1};", newName, projectID);
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
+        public static int UpdateDescription(int projectID, string newDescription)
+        {
+            string sql = string.Format("update dbo.Project set Description = {0} where ProjectId = {1};", newDescription, projectID);
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
+
+        public static int RemoveProject(int projectID)
+        {
+            string sql = string.Format("delete from dbo.Project where ProjectId = {0};", projectID);
+
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
 
         public static List<ProjectModel> ViewAllUserProjects(string userID)
         {
@@ -19,6 +36,11 @@ namespace IssueTrackerDataLibrary.BusinessLogic
             return SqlDataAccess.LoadData<ProjectModel>(sql);
         }
 
+        public static ProjectModel ViewProject(int projectID)
+        {
+            string sql = string.Format("select * from dbo.Project where ProjectId = '{0}';", projectID);
+            return SqlDataAccess.LoadData<ProjectModel>(sql)[0];
+        }
 
         /// <summary>
         /// Create the project first, then adds the creator to ProjectUser table as a project creator.
@@ -100,6 +122,8 @@ namespace IssueTrackerDataLibrary.BusinessLogic
            
             return SqlDataAccess.SaveData(sql, data);
         }
+
+
 
 /*        public static int ViewAllUserProjects(int userID)
         {

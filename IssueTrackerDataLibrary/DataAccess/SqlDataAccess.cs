@@ -97,6 +97,13 @@ namespace IssueTrackerDataLibrary.DataAccess
             }
         }
 
+        public static int ExecuteStatement(string sql)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return cnn.Execute(sql);
+            }
+        }
         /// CANNOT GET IT TO WORK, PART OF 'GETTING ID OF INSERTED ROW'
 /*        public static int GetScopeIdentity()
         {

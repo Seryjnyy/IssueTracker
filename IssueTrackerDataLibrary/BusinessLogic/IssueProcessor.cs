@@ -8,6 +8,18 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 {
     public static class IssueProcessor
     {
+        public static int MarkIssueCompleted(int issueID)
+        {
+            string sql = string.Format("update dbo.Issues set Completed = 1 where IssueId = {0}", issueID);
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
+
+        public static int RemoveIssue(int issueID)
+        {
+            string sql = string.Format("delete from dbo.Issues where IssueId = {0};", issueID);
+
+            return SqlDataAccess.ExecuteStatement(sql);
+        }
         /// <summary>
         /// Add Issue to the database. It will process the data
         /// so it is inserted correctly by using the appropriate sql statement.

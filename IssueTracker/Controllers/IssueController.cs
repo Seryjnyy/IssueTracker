@@ -58,18 +58,17 @@ namespace IssueTracker.Controllers
 
             return View();
         }
-
-        public ActionResult ViewIssuesForProject(int projectID)
+        public List<IssueModel> FindIssuesForProject(int projectID)
         {
             var data = IssueProcessor.ViewIssuesForProject(projectID);
             List<IssueModel> issues = new List<IssueModel>();
             ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            ViewBag.ProjectID = projectID;
 
             foreach (var row in data)
             {
                 var user = userManager.FindById(row.AuthorID);
-                IssueModel model = new IssueModel
+
+                issues.Add(new IssueModel
                 {
                     Creator = row.AuthorID,
                     CreatorName = user.FirstName + " " + user.LastName,
@@ -80,11 +79,22 @@ namespace IssueTracker.Controllers
                     Label = row.Label,
                     Priority = row.Priority,
                     IssueID = row.IssueID
-                };
-                issues.Add(model);
+                });
             }
+            return issues;
+        }
 
-            return View(issues);
+        public ActionResult ViewIssuesForProject(int projectID)
+        {
+            ViewBag.ProjectID = projectID;
+            return View(FindIssuesForProject(projectID));
+        }
+
+        [HttpGet]
+        public PartialViewResult ViewIssuesForProjectPartialView(int projectID)
+        {
+            ViewBag.projectID = projectID;
+            return PartialView(FindIssuesForProject(projectID));
         }
     }
 }

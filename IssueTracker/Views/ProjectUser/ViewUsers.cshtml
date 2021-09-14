@@ -1,0 +1,64 @@
+﻿@model IEnumerable<IssueTracker.Models.ProjectUserModel>
+
+<table class="table" id="projectUserTable">
+    <thead>
+        <tr>
+            @*        <th>
+            @Html.DisplayNameFor(model => model.ProjectID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserID)
+        </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+
+            @if (ViewBag.canRemove != null)
+            {
+                if (ViewBag.canRemove == true)
+                {
+                    <th></th>
+                }
+            }
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            @*        <td>
+            @Html.DisplayFor(modelItem => item.ProjectID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserID)
+        </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            @if (ViewBag.canRemove != null)
+            {
+                if (ViewBag.canRemove == true)
+                {
+                    <td>
+                        @Html.ActionLink("Remove", "RemoveUserFromProject", "ProjectUserController", new { projectID = item.ProjectID, userID = item.UserID }, null)
+                    </td>
+                }
+            }
+        </tr>
+        }
+    </tbody>
+
+</table>
