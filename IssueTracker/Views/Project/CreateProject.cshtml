@@ -1,10 +1,10 @@
 ﻿@model IssueTracker.Models.ProjectModel
 
 @{
-    ViewBag.Title = "CreateProject";
+    ViewBag.Title = "Create new project";
 }
 
-<h2>CreateProject</h2>
+<h2>Create new project</h2>
 
 
 @using (Html.BeginForm()) 
@@ -12,7 +12,6 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>ProjectModel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -41,7 +40,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "ViewProjects", "Project", null, null)
+    @Html.ActionLink("Back to project list", "ViewProjects", "Project", null, null)
 </div>
 
 @section Scripts {

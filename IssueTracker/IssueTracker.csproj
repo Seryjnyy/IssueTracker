@@ -199,6 +199,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\ProjectUserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -220,6 +221,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IssueModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\NotificationModel.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\ProjectUserModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -625,6 +627,23 @@
     <Content Include="Selectize\scss\selectize.bootstrap4.scss" />
     <Content Include="Selectize\scss\selectize.default.scss" />
     <Content Include="Selectize\scss\selectize.scss" />
+    <Content Include="Views\Issue\ManageIssues.cshtml" />
+    <Content Include="Views\Issue\CreateIssuePartialView.cshtml" />
+    <Content Include="Views\Issue\ViewIssue.cshtml" />
+    <Content Include="Views\Issue\EditIssuePartialView.cshtml" />
+    <Content Include="Views\Comment\ViewCommentsForIssuePartialView.cshtml" />
+    <Content Include="Views\Comment\CreateCommentForIssuePartialView.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial2.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial3.cshtml" />
+    <Content Include="Views\Shared\_Notifications.cshtml" />
+    <Content Include="Views\Issue\_SelectEmailValueUserID.cshtml" />
+    <Content Include="Views\Notification\ViewNotifications.cshtml" />
+    <Content Include="Views\Account\UserNameEmail.cshtml" />
+    <Content Include="Views\Project\EditProject.cshtml" />
+    <Content Include="Views\Notification\ViewNotificationsNavbar.cshtml" />
+    <Content Include="Views\Issue\ViewAllIssues.cshtml" />
+    <Content Include="Views\Issue\ViewIssuesYouCreated.cshtml" />
+    <Content Include="Views\Issue\ViewIssuesAssigendToYou.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

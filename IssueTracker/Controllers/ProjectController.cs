@@ -14,30 +14,41 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class ProjectController : Controller
     {
-        public ActionResult ViewProjectsTab()
+        public ActionResult EditProject(int projectID)
         {
-            var data = ProjectProcessor.ViewAllUserProjects(User.Identity.GetUserId());
-            List<ProjectModel> projects = new List<ProjectModel>();
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var data = ProjectProcessor.ViewProject(projectID);
 
-            foreach (var row in data)
+            ProjectModel project = new ProjectModel
             {
-                var creator = userManager.FindById(row.UserID);
-                projects.Add(new ProjectModel
-                {
-                    Name = row.Name,
-                    Description = row.Description,
-                    Creator = row.UserID,
-                    CreatorName = creator.FirstName + " " + creator.LastName,
-                    DateTimeCreated = row.DateTimeCreated,
-                    ProjectID = row.ProjectID
-                });
+                Description = data.Description,
+                ProjectID = projectID
+            };
+
+            return PartialView(project);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProject(ProjectModel data)
+        {
+            if (data.Description.Length < 200)
+            {
+                int recordsCreated = ProjectProcessor.UpdateDescription(data.ProjectID, data.Description);
+                // could add error messages and that
             }
 
-            return View(projects);
+            return RedirectToAction("ViewProject", new { projectId = data.ProjectID });
         }
+
+
         public ActionResult ViewProject(int projectID)
         {
+            // only allow admin and creator to see edit function and manageMembers link
+            bool isCreatorOrAdmin = false;
+            string userRole = ProjectUserProcessor.FindUserRoleInProject(projectID, User.Identity.GetUserId());
+            if (userRole == "Admin" || userRole == "Creator")
+                isCreatorOrAdmin = true;
+
             ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var data = ProjectProcessor.ViewProject(projectID);
             ViewBag.projectID = projectID;
@@ -51,7 +62,7 @@ namespace IssueTracker.Controllers
                 CreatorName = creator.FirstName + " " + creator.LastName,
                 DateTimeCreated = data.DateTimeCreated,
                 ProjectID = data.ProjectID,
-                IsCreator = (data.UserID == User.Identity.GetUserId())
+                IsCreatorOrAdmin = isCreatorOrAdmin
             };
             return View(project);
         }
@@ -109,10 +120,33 @@ namespace IssueTracker.Controllers
                     DateTime.Now
                     );
 
-                return RedirectToAction("../Home/About");
+                return RedirectToAction("ViewProjects");
             }
 
             return View();
         }
+
+        /*        public ActionResult ViewProjectsTab()
+        {
+            var data = ProjectProcessor.ViewAllUserProjects(User.Identity.GetUserId());
+            List<ProjectModel> projects = new List<ProjectModel>();
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+            foreach (var row in data)
+            {
+                var creator = userManager.FindById(row.UserID);
+                projects.Add(new ProjectModel
+                {
+                    Name = row.Name,
+                    Description = row.Description,
+                    Creator = row.UserID,
+                    CreatorName = creator.FirstName + " " + creator.LastName,
+                    DateTimeCreated = row.DateTimeCreated,
+                    ProjectID = row.ProjectID
+                });
+            }
+
+            return View(projects);
+        }*/
     }
 }

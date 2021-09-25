@@ -1,0 +1,11 @@
+﻿@model IEnumerable<IssueTracker.Models.NotificationModel>
+
+
+@foreach (var item in Model)
+{
+    <li>
+        @item.Content
+        <br><span class="notification-date">@item.DateTimeCreated</span>
+    </li>
+}
+

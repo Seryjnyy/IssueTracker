@@ -12,14 +12,21 @@ namespace IssueTrackerDataLibrary.BusinessLogic
                 {
                     string sql = string.Format("select FirstName, LastName from dbo. where UserID = '{0}';", userID);
                 }*/
-        public static int UpdateName(int projectID, string newName)
+
+        public static string GetProjectName(int projectID)
+        {
+            string sql = string.Format("select Name from dbo.Project where ProjectId = {0};", projectID);
+            return SqlDataAccess.LoadData<string>(sql)[0];
+        }
+        // we do not allow to change name
+/*        public static int UpdateName(int projectID, string newName)
         {
             string sql = string.Format("update dbo.Project set Name = {0} where ProjectId = {1};", newName, projectID);
             return SqlDataAccess.ExecuteStatement(sql);
-        }
+        }*/
         public static int UpdateDescription(int projectID, string newDescription)
         {
-            string sql = string.Format("update dbo.Project set Description = {0} where ProjectId = {1};", newDescription, projectID);
+            string sql = string.Format("update dbo.Project set Description = '{0}' where ProjectId = {1};", newDescription, projectID);
             return SqlDataAccess.ExecuteStatement(sql);
         }
 
@@ -32,8 +39,17 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 
         public static List<ProjectModel> ViewAllUserProjects(string userID)
         {
-            string sql = string.Format("select * from dbo.Project where UserID = '{0}';", userID);
-            return SqlDataAccess.LoadData<ProjectModel>(sql);
+            string sql = string.Format("select distinct ProjectID from dbo.ProjectUser where UserID = '{0}';", userID);
+            List<int> projectIDs =  SqlDataAccess.LoadData<int>(sql);
+            List<ProjectModel> projects = new List<ProjectModel>();
+
+
+            foreach (int projectID in projectIDs)
+            {
+                projects.Add(ViewProject(projectID));    
+            }
+
+            return projects;
         }
 
         public static ProjectModel ViewProject(int projectID)
@@ -54,7 +70,7 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 
             int projectID = GetProjectID(creatorID, name, description, dateTimeCreated);
 
-            recordsCreated += AddProjectUser(projectID, creatorID, 1);
+            recordsCreated += AddProjectUser(projectID, creatorID, "Creator");
 
             return recordsCreated;
         }
@@ -108,7 +124,7 @@ namespace IssueTrackerDataLibrary.BusinessLogic
         /// <returns>
         /// Amount of rows successfully inserted.
         /// </returns>
-        public static int AddProjectUser(int projectID, string userID, int role)
+        public static int AddProjectUser(int projectID, string userID, string role)
         {
             ProjectUserModel data = new ProjectUserModel
             {

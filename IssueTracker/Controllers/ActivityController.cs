@@ -14,15 +14,25 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class ActivityController : Controller
     {
-        /// <summary>
-        /// Shows all activity for a project
-        /// </summary>
-        /// <returns>
-        /// A view that takes the ActivityModel and displays it.
-        /// </returns>
-        public ActionResult ViewActivityForProject(int projectID)
+        public ActionResult ViewActivityForIssuePartialView(int issueID)
         {
-            return View(FindActivityForProject(projectID));
+            var data = ActivityProcessor.ViewActivityForIssue(issueID);
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            List<ActivityModel> activities = new List<ActivityModel>();
+
+            foreach (var row in data)
+            {
+                var user = userManager.FindById(row.UserID);
+                activities.Add(new ActivityModel
+                {
+                    UserID = row.UserID,
+                    IssueID = row.IssueID,
+                    DateTimeCreated = row.DateTimeCreated,
+                    ActivityContent = row.ActivityContent,
+                    UserName = user.FirstName + " " + user.LastName
+                });
+            };
+            return PartialView("ViewActivityForProjectPartialView", activities);
         }
 
         [HttpGet]
@@ -53,5 +63,17 @@ namespace IssueTracker.Controllers
 
             return activities;
         }
+
+        /// <summary>
+        /// Shows all activity for a project
+        /// </summary>
+        /// <returns>
+        /// A view that takes the ActivityModel and displays it.
+        /// </returns>
+        /*        public ActionResult ViewActivityForProject(int projectID)
+                {
+                    return View(FindActivityForProject(projectID));
+                }*/
+
     }
 }

@@ -2,51 +2,58 @@
 
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("EditProjectUserRole", "ProjectUser"@*, new { projectID = ViewBag.projectID}*@))
 {
-    @Html.AntiForgeryToken()
+@Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>ProjectUserModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+    <h4>ProjectUserModel</h4>
+    <hr />
+    @if (ViewBag.editUserMessage != null)
+    {
 
-        @*jquery multiselect*@
-        <div class="form-group">
-            <label class="control-label col-md-2" for="projectUsers">Select users </label>
-            <select id="projectUsers" data-val="true" class="form-control single-line" data-val-required="Select a user." name="projectUsers" value="">
-                <option value=" ">Select priority</option>
-                <option value="1">For later</option>
-                <option value="2">Not much</option>
-                <option value="3">Important</option>
-                <option value="4">ASAP</option>
+        <span class="text-danger"> @ViewBag.editUserMessage</span>
+
+    }
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @*jquery multiselect*@
+    <div class="form-group">
+        <label class="control-label col-md-2" for="projectUsers">Select users </label>
+        <div class="col-md-10">
+            <select id="projectUsers" data-val="true" data-val-required="Select a user." name="projectUsers" value="">
             </select>
-            <span class="field-validation-valid text-danger" data-valmsg-for="projectUsers" data-valmsg-replace="true"></span>
+            <span class="field-validation-valid text-danger" data-valmsg-for="projectUsers" data-valmsg-replace="true" required></span>
         </div>
+    </div>
 
 
 
-        <div class="form-group">
-            <label class="control-label col-md-2" for="roleSelect">Select role</label>
-            <select class="form-control single-line" id="roleSelect" data-val="true" data-val-required="Select a role." name="roleSelect" value="">
-                <option value=" ">Select priority</option>
-                <option value="1">For later</option>
-                <option value="2">Not much</option>
-                <option value="3">Important</option>
-                <option value="4">ASAP</option>
-            </select>
-            <span class="field-validation-valid text-danger" data-valmsg-for="roleSelect" data-valmsg-replace="true"></span>
-        </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="roleSelect">Select role</label>
+        <div class="col-md-10">
+                <select name="Role" class="form-control">
+                    <option value="Developer">Developer</option>
+                    <option value="Project Manager">Project Manager</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Submitter">Submitter</option>
+                </select>
+                <span class="field-validation-valid text-danger" data-valmsg-for="roleSelect" data-valmsg-replace="true"></span>
+</div>
+    </div>
+
+        <input name="ProjectID" style="display:none" value="@ViewBag.projectID" />
 
         @*    <div class="form-group">
 
 
-                @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
+            @Html.LabelFor(model => model.Role, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Role, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -55,14 +62,4 @@
         </div>
     </div>
 }
-
-
-
-    <script>
-        $(document).ready({
-
-            });
-
-
-    </script>
 

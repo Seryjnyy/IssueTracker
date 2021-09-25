@@ -15,8 +15,7 @@ namespace IssueTracker.Models
         /// Represents the project role given to the user.
         /// </summary>
         [Required]
-        [Range(0, 4)]
-        public int Role { get; set; }
+        public string Role { get; set; }
 
         /// <summary>
         /// Represents the email of the user.
@@ -42,5 +41,8 @@ namespace IssueTracker.Models
         /// Represents the users name.
         /// </summary>
         public string UserName { get; set; }
+
+        public int ProjectUserID { get; set; }
+
     }
 }

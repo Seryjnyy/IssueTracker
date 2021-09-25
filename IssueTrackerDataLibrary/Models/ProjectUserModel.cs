@@ -20,6 +20,6 @@ namespace IssueTrackerDataLibrary.Models
         /// <summary>
         /// Represents the project role given to the user.
         /// </summary>
-        public int Role { get; set; }
+        public string Role { get; set; }
     }
 }

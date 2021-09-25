@@ -4,13 +4,15 @@ using System.Text;
 
 namespace IssueTrackerDataLibrary.Models
 {
-    public class ActivityModel
+    public class NotificationModel
     {
-        public int ActivityId { get; set; }
+        public int NotificationID { get; set; }
+        public string UserID { get; set; }
+        public string AuthorID { get; set; }
         public int ProjectID { get; set; }
         public int IssueID { get; set; }
-        public string UserID { get; set; }
+        public string Content { get; set; }
         public DateTime DateTimeCreated { get; set; }
-        public string ActivityContent { get; set; }
+
     }
 }

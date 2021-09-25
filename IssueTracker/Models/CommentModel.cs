@@ -36,6 +36,8 @@ namespace IssueTracker.Models
         /// </summary>
         public string AuthorName { get; set; }
 
+        public int IssueID { get; set; }
+
 
     }
 }

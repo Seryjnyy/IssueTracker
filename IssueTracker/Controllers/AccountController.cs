@@ -22,10 +22,23 @@ namespace IssueTracker.Controllers
         {
         }
 
-        public string getName()
+/*        public string getName()
         {
             var user =_userManager.FindById(User.Identity.GetUserId());
             return user.FirstName + " " + user.LastName;
+        }*/
+        [AllowAnonymous]
+        public ActionResult UserNameEmail()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = userManager.FindById(User.Identity.GetUserId());
+                ViewBag.userName = user.FirstName + " " + user.LastName;
+                ViewBag.userEmail = user.Email;
+            }
+
+            return PartialView();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )

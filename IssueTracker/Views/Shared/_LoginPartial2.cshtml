@@ -1,0 +1,35 @@
+﻿@*@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <div class="profile-details-name">
+
+        @if (Session["UserFullName"] != null)
+        {
+            @Html.Raw(Session["UserFullName"])
+        }
+    </div>
+    <div class="profile-details-email">
+        @if (Session["UserEmail"] != null)
+        {
+            @Html.Raw(Session["UserEmail"])
+        }
+    </div>
+
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="#" id="sidebar-logout-link"><i class="bx bx-log-out" id="sidebar-logout"></i></a>
+    }
+
+}
+else
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="#" id="sidebar-logout-link"><i class="bx bx-log-in" id="sidebar-login"></i></a>
+    }
+}
+
+*@

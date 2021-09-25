@@ -1,0 +1,134 @@
+﻿<style>
+    .notificationBox {
+        display: none;
+        position: absolute;
+        margin-top: -2px;
+        width: 250px;
+        right: 5px;
+        height: auto;
+        color: #fff;
+    }
+
+    .notification-content {
+        width: 100%;
+        height: 300px;
+        background-color: #332e69;
+        margin-top: 10px;
+        border-radius: 5px;
+    }
+
+    .notificationBox .notification-content ul {
+        display:flex;
+        flex-direction:column;
+        justify-content: space-between;
+        padding-top: 5px;
+        width: 96%;
+        padding-left: 2%;
+    }
+        .notificationBox .notification-content ul li{
+            margin-top:20px;
+        }
+
+        #notifications-navbar {
+            height: auto;
+        }
+
+    .notification-date {
+        font-size: 12px;
+    }
+
+    .notification-bottom {
+        width: 100%;
+        height: 46px;
+        display: flex;
+        align-items: center;
+    }
+
+        .notification-bottom a {
+            text-align: center;
+        }
+
+    .profileBox {
+        display: none;
+        position: absolute;
+        margin-top: -2px;
+        width: 150px;
+        right: 5px;
+        height: auto;
+        color: #fff;
+    }
+
+    .profile-content {
+        width: 100%;
+        height: auto;
+        background-color: #332e69;
+        margin-top: 10px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .showNotification {
+        display: block;
+    }
+
+    .profileBox .profile-content form#logoutForm {
+        height: 40px;
+        width: 100%;
+        display: flex;
+    }
+
+        .profileBox .profile-content form#logoutForm a {
+            height: 40px;
+            width: 100%;
+            z-index: 999999;
+        }
+</style>
+
+
+@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <li id="notifications-navbar">
+        <a href="#">
+            <span class="sidebar-nav-link"><span class="navbar-link-text">Notifications</span></span>
+            <i class="bx bx-bell"></i>
+        </a>
+        <div class="notificationBox">
+            <div class="notification-content">
+                <ul>
+                    <!--Notification content goes here-->
+                </ul>
+                <div class="notification-bottom">
+                    <a href="@Url.Action("Index", "Manage")" id="navbar-logout-link"><span class="sidebar-nav-link">See all</span></a>
+                </div>
+            </div>
+
+        </div>
+    </li>
+    <li id="profile-navbar">
+        <a href="#">
+            <span class="sidebar-nav-link"><span class="navbar-link-text">User</span></span>
+            <i class="bx bx-user"></i>
+        </a>
+        <div class="profileBox">
+            <div class="profile-content">
+                @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <a href="#" id="navbar-logout-link"><span class="sidebar-nav-link">Log out</span></a>
+                }
+                <a href="#"><span class="sidebar-nav-link">View Profile</span></a>
+                <a href="#"><span class="sidebar-nav-link">View Notifications</span></a>
+
+            </div>
+
+        </div>
+    </li>
+}
+else
+{
+    <li><a href="@Url.Action("Register", "Account")" id="registerLink"><span class="sidebar-nav-link">Register</span></a></li>
+    <li><a href="@Url.Action("Login", "Account")" id = "loginLink"><span class="sidebar-nav-link">Log in</span></a></li>
+}
+

@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<IssueTracker.Models.ProjectModel>
 
 @{
-    ViewBag.Title = "ViewProjects";
+    ViewBag.Title = "View projects";
 }
 
 
-<h2>ViewProjects</h2>
+<h2>All projects</h2>
 
 
 <p>
@@ -47,11 +47,11 @@
                     @Html.DisplayFor(modelItem => item.DateTimeCreated)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "ViewProject", "Project", new { projectID = item.ProjectID }, null) |
-                    @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new { item.ProjectID }, null) |
+                    @Html.ActionLink("Details", "ViewProject", "Project", new { projectID = item.ProjectID }, null) 
+@*                    @Html.ActionLink("Create Issue", "CreateIssue", "Issue", new { item.ProjectID }, null) |
                     @Html.ActionLink("View Issues", "ViewIssuesForProject", "Issue", new { item.ProjectID }, null) |
                     @Html.ActionLink("View members", "ViewProjectUsers", "ProjectUser", new { item.ProjectID }, null) |
-                    @Html.ActionLink("A", "ViewActivityForProject", "Activity", new { item.ProjectID }, null)
+                    @Html.ActionLink("A", "ViewActivityForProject", "Activity", new { item.ProjectID }, null)*@
                 </td>
             </tr>
 

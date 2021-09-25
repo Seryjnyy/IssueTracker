@@ -26,37 +26,39 @@ namespace IssueTracker.Models
         [DisplayName("Deadline")]
         public DateTime DateTimeDeadline { get; set; }
 
-        /// <summary>
-        /// Represents the list of lables applied to the issue.
-        /// Max amount of values !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        /// Need to change back to list !!!!!!!!!!!!!!!!!!!!!!!!
-        /// </summary>
-        [Range(1, 4)]
-        public int Label { get; set; }
+        [Required]
+        public string Status { get; set; }
 
         /// <summary>
         /// Represents the importance, the value will be
         /// used to sort issues.
         /// </summary>
         [Required]
-        [Range(1, 4)]
-        public int Priority { get; set; }
+        public string Priority { get; set; }
 
-        // Not part of form
+        [Required]
+        public string Name { get; set; }
 
-        public int IssueID { get; set; }
-        /// <summary>
-        /// Represents the user id of the creator.
-        /// </summary>
-        public string Creator { get; set; }
-
-        public string CreatorName { get; set; }
+        [Required]
+        public string Type { get; set; }
 
         /// <summary>
         /// Represents the user who the issue was assigned to.
         /// Can be null to represent that no one was assigned.
         /// </summary>
-        public string Assignee { get; set; }
+        public string AssigneeID { get; set; }
+
+        // Not part of form
+
+        public DateTime DateTimeUpdated { get; set; }
+
+        public int IssueID { get; set; }
+        /// <summary>
+        /// Represents the user id of the creator.
+        /// </summary>
+        public string AuthorID { get; set; }
+
+        public string AuthorName { get; set; }
 
         public string AssigneeName { get; set; }
 
@@ -70,5 +72,6 @@ namespace IssueTracker.Models
         /// Represents the id of the project.
         /// </summary>
         public int ProjectID { get; set; }
+
     }
 }

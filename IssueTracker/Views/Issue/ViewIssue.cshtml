@@ -1,0 +1,230 @@
+﻿@model IssueTracker.Models.IssueModel
+
+@{
+    ViewBag.Title = "ViewIssue";
+}
+
+<h2>ViewIssue</h2>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        <a href="#about" class="nav-link" data-toggle="tab">About</a>
+    </li>
+    @if (ViewBag.isCreator)
+    {
+        <li class="nav-item">
+            <a href="#edit" class="nav-link" data-toggle="tab">Edit</a>
+        </li>
+    }
+    <li class="nav-item">
+        <a href="#comments" class="nav-link" data-toggle="tab">Comments</a>
+    </li>
+    <li class="nav-item">
+        <a href="#activity" class="nav-link" data-toggle="tab">Activity</a>
+    </li>
+</ul>
+
+<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+    <div class="tab-pane fade" id="about">
+        <div>
+            <h4>IssueModel</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeDeadline)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeDeadline)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Priority)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Priority)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IssueID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IssueID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AuthorID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AuthorID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AuthorName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AuthorName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AssigneeID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AssigneeID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AssigneeName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AssigneeName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeCreated)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeCreated)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeUpdated)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeUpdated)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ProjectID)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ProjectID)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Status)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Type)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Type)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+            </dl>
+            @if (ViewBag.isCreator)
+            {
+                @Html.ActionLink("Remove Issue", "RemoveIsse", "Issue", null, null);
+            }
+        </div>
+    </div>
+    @if (ViewBag.isCreator)
+    {
+        <div class="tab-pane fade" id="edit">
+            <div id="editIssue"></div>
+        </div>
+    }
+    <div class="tab-pane fade" id="comments">
+        @Html.Partial("../Comment/CreateCommentForIssuePartialView", new IssueTracker.Models.CommentModel { })
+        <div id="viewComments"></div>
+    </div>
+    <div class="tab-pane fade" id="activity">
+        <div id="viewActivity"></div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#about").addClass("active in");
+
+
+        });
+
+            var issueID = @ViewBag.issueID;
+            $.ajax({
+                url: '/Issue/EditIssuePartialView',
+                data: {
+                    issueID: issueID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#editIssue').html(result);
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+            $.ajax({
+                url: '/Comment/ViewCommentsForIssuePartialView',
+                data: {
+                    issueID: issueID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#viewComments').html(result);
+                    $('#commentTable').DataTable({});
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+            $.ajax({
+                url: '/Activity/ViewActivityForIssuePartialView',
+                data: {
+                    issueID: issueID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#viewActivity').html(result);
+                    $('#activityTable').DataTable({});
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+    </script>
+
+}

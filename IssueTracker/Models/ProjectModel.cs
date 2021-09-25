@@ -48,7 +48,7 @@ namespace IssueTracker.Models
         [DataType(DataType.DateTime)]
         public DateTime DateTimeCreated { get; set; }
 
-        public bool IsCreator { get; set; }
+        public bool IsCreatorOrAdmin { get; set; }
         /// <summary>
         /// Represents the users that are part of the project,
         /// along with their roles.

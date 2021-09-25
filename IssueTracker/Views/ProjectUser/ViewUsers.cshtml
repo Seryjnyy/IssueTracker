@@ -18,14 +18,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
             </th>
+            <th></th>
 
-            @if (ViewBag.canRemove != null)
-            {
-                if (ViewBag.canRemove == true)
-                {
-                    <th></th>
-                }
-            }
         </tr>
     </thead>
 
@@ -48,15 +42,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
-            @if (ViewBag.canRemove != null)
-            {
-                if (ViewBag.canRemove == true)
+            @*dont render remove for creator and admin*@
+            <td>
+                @if (item.Role != "Admin" && item.Role != "Creator")
                 {
-                    <td>
-                        @Html.ActionLink("Remove", "RemoveUserFromProject", "ProjectUserController", new { projectID = item.ProjectID, userID = item.UserID }, null)
-                    </td>
+                    @Html.ActionLink("Remove", "RemoveUserFromProject", new { item.ProjectUserID, item.ProjectID }@*, new { id = "removeUserLink" }*@)
                 }
-            }
+            </td>
         </tr>
         }
     </tbody>

@@ -6,7 +6,7 @@ namespace IssueTrackerDataLibrary.Models
 {
     public class IssueModel
     {
-        public int IssueID { get; set; }
+        public int IssueId { get; set; }
         /// <summary>
         /// Represents the user who created the issuse.
         /// </summary>
@@ -35,19 +35,17 @@ namespace IssueTrackerDataLibrary.Models
         /// </summary>
         public DateTime DateTimeDeadline { get; set; }
 
-        /// <summary>
-        /// Represents the list of lables applied to the issue.
-        /// Max amount of values !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        /// Need to change back to list !!!!!!!!!!!!!!!!!!!!!!!!
-        /// </summary>
-        public int Label { get; set; }
+        public DateTime DateTimeUpdated { get; set; }
 
-        /// <summary>
-        /// Represents the importance, the value will be
-        /// used to sort issues.
-        /// </summary>
-        public int Priority { get; set; }
+        public string Status { get; set; }
+
+        public string Priority { get; set; }
 
         public int ProjectID { get; set; }
+
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
     }
 }

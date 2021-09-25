@@ -1,15 +1,21 @@
 ﻿@model IssueTracker.Models.ProjectModel
 
 @{
-    ViewBag.Title = "ViewProject";
+    ViewBag.Title = "View projects";
 }
 
-<h2>ViewProject</h2>
+<h2>Project - @Html.DisplayFor(model => model.Name)</h2>
 
 <ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a href="#about" class="active"  data-toggle="tab">About</a>
+    <li class="nav-item active">
+        <a href="#about" class="nav-link" data-toggle="tab">About</a>
     </li>
+    @if (Model.IsCreatorOrAdmin)
+    {
+        <li class="nav-item">
+            <a href="#edit" class="nav-link" data-toggle="tab">Edit</a>
+        </li>
+    }
     <li class="nav-item">
         <a href="#members" class="nav-link" data-toggle="tab">Members</a>
     </li>
@@ -24,7 +30,7 @@
 <div class="tab-content" style="margin-bottom:50px;margin-top:50px">
     <div class="tab-pane fade" id="about">
         <div>
-            <h4>Project</h4>
+            <h4>Details</h4>
             <hr />
             <dl class="dl-horizontal">
                 <dt>
@@ -78,16 +84,24 @@
             </dl>
         </div>
     </div>
+    @if (Model.IsCreatorOrAdmin)
+    {
+        <div class="tab-pane fade" id="edit">
+            <div id="partialViewEdit">
+            </div>
+        </div>
+    }
     <div class="tab-pane fade" id="members">
 
-            @if (Model.IsCreator)
-            {
-                @Html.ActionLink("Manage members", "ManageMembers", "ProjectUser", new {projectID = Model.ProjectID }, null);
-            }
+        @if (Model.IsCreatorOrAdmin)
+        {
+            @Html.ActionLink("Manage members", "ManageMembers", "ProjectUser", new { projectID = Model.ProjectID }, null)
+        }
 
         <div id="partialViewMembers"></div>
     </div>
     <div class="tab-pane fade" id="issues">
+        @Html.ActionLink("Manage issues", "ManageIssues", "Issue", new { projectID = Model.ProjectID }, null)
         <div id="partialViewIssues"></div>
     </div>
     <div class="tab-pane fade" id="activity">
@@ -96,12 +110,15 @@
 </div>
 
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to project list", "ViewProjects", "Project")
 </p>
 
 @section Scripts{
     <script type="text/jscript">
-           $(document).ready(function () {
+        $(document).ready(function () {
+            $("#about").addClass("active in");
+
+
             var projectID = @ViewBag.projectID;
             $.ajax({
                 url: '/ProjectUser/ViewUsers',
@@ -154,11 +171,25 @@
                    }
                });
 
-               
-
-
-
-               
+            // cant use currently because we dont know if partialViewEdit will exist if user not admin
+            if ($("#partialViewEdit").length > 0) {
+                $.ajax({
+                    url: '/Project/EditProject',
+                    data: {
+                        projectID: projectID
+                    },
+                    contentType: 'application/html; charset=utf-8',
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function (result) {
+                        $('#partialViewEdit').html(result);
+                    },
+                    error: function () {
+                        alert(status);
+                    }
+                });
+            }
+  
         });
     </script>
 

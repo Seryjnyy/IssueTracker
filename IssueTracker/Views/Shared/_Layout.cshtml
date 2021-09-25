@@ -3,94 +3,107 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
 
     <link rel="stylesheet" type="text/css" href="~/DataTables/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/sidebar.css" />
     <link rel="stylesheet" type="text/css" href="~/Selectize/css/selectize.css" />
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+    <div class="sidebar open">
+        <div class="sidebar-logo">
+            <i class="bx bxs-food-menu icon"></i>
+            <div class="sidebar-logo-title">IssueTracker</div>
+            <i class="bx bx-menu-alt-right" id="sidebar-button"></i>
+        </div>
+        <ul class="sidebar-nav">
+            <li>
+                <a href="@Url.Action("Index", "Home")">
+                    <i class="bx bx-grid-alt"></i>
+                    <span class="sidebar-nav-link">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            <li>
+                <a href="@Url.Action("Index", "Manage")">
+                    <i class="bx bx-user"></i>
+                    <span class="sidebar-nav-link">Profile</span>
+                </a>
+                <span class="tooltip">Profile</span>
+            </li>
+            <li @*class="sidebar-link-grow"*@>
+                <a href="@Url.Action("ViewProjects", "Project")">
+                    <i class="bx bx-list-ul"></i>
+                    <span class="sidebar-nav-link">Project @* &#9660;*@</span>
+                </a>
+                <span class="tooltip">Project</span>
+
+                @*                <ul>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-nav-link">Your projects</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-nav-link">All projects</span>
+                            </a>
+                        </li>
+                    </ul>*@
+
+
+            </li>
+            <li @*class="sidebar-link-grow"*@>
+                <a href="@Url.Action("ViewAllIssues", "Issue")">
+                    <i class="bx bx-list-ul"></i>
+                    <span class="sidebar-nav-link">Issue   @*&#9660;*@</span>
+                </a>
+
+                <span class="tooltip">Issue</span>
+
+                @*                <ul>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-nav-link">Your issues</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-nav-link">All issues</span>
+                            </a>
+                        </li>
+                    </ul>*@
+
+            </li>
+            <li class="sidebar-profile">
+                <div class="sidebar-profile-details">
+                    @Html.Action("UserNameEmail", "Account")
+                </div>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="navbar-custom">
+        <div class="navbar-custom-right">
+            <ul>
+                @Html.Partial("_LoginPartial3")
+
+            </ul>
         </div>
     </div>
 
-    @*<nav id="sidebar">
-
-            <div class="sidebar-button"></div>
-            <div class="sidebar-header">
-                <h3>@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</h3>
-            </div>
-            <div class="sidebar-content">
-                <ul class="lisst-unstyled components">
-
-                    <p>The Providers</p>
-                    <li class="active">
-                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                        <ul class="collapse list-unstyled" id="homeSubmenu">
-                            <li>
-                                <a href="#">Home 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Home 2</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">About</a>
-                    </li>
-                    <li>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
-                            <li>
-                                <a href="#">Page 1</a>
-                            </li>
-                            <li>
-                                <a href="#">Page 2</a>
-                            </li>
-
-
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="#">Policy</a>
-                    </li>
-
-                    <li>
-                        <a href="#">Contact Us</a>
-                    </li>
-
-                </ul>
-            </div>
-
-        </nav>*@
-
-    <div class="container body-content">
+    <div class="container body-content" style="padding-left:250px">
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
         </footer>
     </div>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
@@ -108,7 +121,77 @@
                 });
             });
         </script>*@
+    <script>
+        let sidebar = document.querySelector(".sidebar");
+        let closeBtn = document.querySelector("#sidebar-button");
+        let bodyContent = document.querySelector(".body-content");
 
+        closeBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();//calling the function(optional)
+        });
+
+        // following are the code to change sidebar button(optional)
+        function menuBtnChange() {
+            if (sidebar.classList.contains("open")) {
+                closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+                $(".body-content").css({ "padding-left": "250px" });
+
+            } else {
+                closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");//replacing the iocns class
+                $(".body-content").css({ "padding-left": "78px" });
+            }
+        }
+
+        // not really important, only slightly improves viewing on phone
+@*        $(document).ready(function () {
+            if ($(window).width() <= 700) {
+                $(".sidebar").removeClass("open");
+                $(".body-content").css({ "padding-left": "78px" });
+                $(".sidebar").css({ "left": "-20px" });
+            }
+        });*@
+    </script>
+
+    <script>
+        $.ajax({
+            url: '/Notification/ViewNotificationsNavbar',
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('.notification-content ul').html(result);
+            },
+            error: function () {
+                alert(status);
+            }
+        });
+
+    </script>
+
+    <script>
+        $("#sidebar-logout-link").click(function () {
+            document.getElementById('logoutForm').submit();
+        });
+        $("#navbar-logout-link").click(function () {
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
+
+    <script>
+        $("#notifications-navbar").hover(function () {
+            $(".notificationBox").addClass("showNotification");
+        }, function () {
+            $(".notificationBox").removeClass("showNotification");
+        });
+
+        $("#profile-navbar").hover(function () {
+            $(".profileBox").addClass("showNotification");
+        }, function () {
+            $(".profileBox").removeClass("showNotification");
+        });
+
+    </script>
 
 </body>
 </html>

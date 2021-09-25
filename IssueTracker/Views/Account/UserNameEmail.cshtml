@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <div class="profile-details-name">
+        @ViewBag.userName
+    </div>
+    <div class="profile-details-email">
+        @ViewBag.userEmail
+    </div>
+
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="#" id="sidebar-logout-link"><i class="bx bx-log-out" id="sidebar-logout"></i></a>
+    }
+
+}
+else
+{
+    <div class="profile-details-name">
+        <a href="@Url.Action("Login", "Account")" id="loginLink"><span class="sidebar-nav-link">Log in</span></a>
+    </div>
+    <div class="profile-details-email">
+        <a href="@Url.Action("Register", "Account")" id="registerLink"><span class="sidebar-nav-link">Register</span></a>
+    </div>
+
+    <a href="@Url.Action("Login", "Account")"> <i class="bx bx-log-in" id="sidebar-login"></i></a>
+}

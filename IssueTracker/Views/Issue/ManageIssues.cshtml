@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Manage issues";
+}
+
+<h2>Manage issues</h2>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item active">
+        <a href="#issues" class="active" data-toggle="tab">Issues</a>
+    </li>
+    <li class="nav-item">
+        <a href="#createIssue" class="nav-link" data-toggle="tab">Create Issue</a>
+    </li>
+</ul>
+
+<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+    <div class="tab-pane fade" id="issues">
+        <div id="viewIssues"></div>
+    </div>
+    <div class="tab-pane fade" id="createIssue">
+        @Html.Partial("CreateIssuePartialView")
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            $("#issues").addClass("active");
+            $("#issues").addClass("in");
+
+            var projectID = @ViewBag.projectID;
+            $.ajax({
+                url: '/Issue/ViewIssuesForProjectPartialView',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#viewIssues').html(result);
+                    $('#issueTable').DataTable({});
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+@*            $.ajax({
+                url: '/Issue/AllEmailAndIDInProject',
+                data: {
+                    projectID: projectID
+                },
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    var data = JSON.parse(result);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#createIssueSelectEmail").append("<option value=" + data[i].UserID + ">" + data[i].UserEmail + "</option>");
+                    }             
+                },
+                error: function () {
+                    alert(status);
+                }
+            });*@
+
+        });
+
+    </script>
+
+}
