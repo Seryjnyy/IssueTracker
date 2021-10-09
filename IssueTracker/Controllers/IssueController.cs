@@ -13,7 +13,50 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class IssueController : Controller
     {
+        // removing issue
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveIssue(FormCollection data)
+        {
+            int issueID = Int32.Parse(data["IssueID"]);
+            bool success = IssueProcessor.RemoveIssue(issueID) == 1;
+
+            if(!success)
+                RedirectToAction("ViewProject", "Issue", new { issueID = issueID });
+
+            string cameFrom = data["cameFrom"];
+            int projectID = Int32.Parse(data["ProjectID"]); ;
+
+            // create projectActivity
+            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var user = userManager.FindById(User.Identity.GetUserId());
+            string projectName = ProjectProcessor.GetProjectName(projectID);
+
+            string activityConntet = string.Format("{0} has removed the issue: {1}, in project: {2}.", user.FirstName + " " + user.LastName, data["Name"], projectName);
+            ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), projectID, DateTime.Now, activityConntet);
+
+            switch (cameFrom)
+            {
+                case "ManageIssues":
+                    return RedirectToAction("ManageIssues", "Issue", new { projectID = projectID});
+                case "ViewProject":
+                    return RedirectToAction("ViewProject", "Project", new { projectID = projectID });
+                default:
+                    return RedirectToAction("ViewAllIssues", "Issue");
+            }
+
+        }
+
+        // removing issue
+
         // mapping function
+        private IssueModel ConvertSingleModel(IssueTrackerDataLibrary.Models.IssueModel data)
+        {
+            List<IssueTrackerDataLibrary.Models.IssueModel> temp = new List<IssueTrackerDataLibrary.Models.IssueModel>();
+            temp.Add(data);
+            return ConvertToModel(temp)[0];
+        }
 
         private List<IssueModel> ConvertToModel(List<IssueTrackerDataLibrary.Models.IssueModel> data)
         {
@@ -35,11 +78,13 @@ namespace IssueTracker.Controllers
                     DateTimeCreated = row.DateTimeCreated,
                     DateTimeDeadline = row.DateTimeDeadline,
                     DateTimeUpdated = row.DateTimeUpdated,
+                    DateTimeDeadlinePicker = row.DateTimeCreated.ToString("yyyy-MM-ddTHH:mm:ss"),
                     Status = row.Status,
                     Priority = row.Priority,
                     IssueID = row.IssueId,
                     Type = row.Type,
-                    Name = row.Name
+                    Name = row.Name,
+                    ProjectID = row.ProjectID
                 });
             }
             return issues;
@@ -52,7 +97,7 @@ namespace IssueTracker.Controllers
             var data = IssueProcessor.ViewIssuesCreatedByUser(User.Identity.GetUserId());
             List<IssueModel> issues = ConvertToModel(data);
 
-            return PartialView(issues);
+            return PartialView("ViewIssues", issues);
         }
 
         public ActionResult ViewIssuesAssigendToYou()
@@ -60,19 +105,32 @@ namespace IssueTracker.Controllers
             var data = IssueProcessor.ViewIssuesAssignedToUser(User.Identity.GetUserId());
             List<IssueModel> issues = ConvertToModel(data);
 
-            return PartialView(issues);
+            ViewBag.moreID = "Assigned";
+            return PartialView("ViewIssues", issues);
         }
 
-        public ActionResult ViewAllIssues()
+        public ActionResult ViewAllIssues(string selectTab = "")
         {
+            ViewBag.selectTab = selectTab;
+            ViewBag.viewLocation = "ViewAllIssues";
+
             return View();
         }
 
         // new stuff for manage issues
 
-        public ActionResult ManageIssues(int projectID)
+        public ActionResult ManageIssues(int projectID, string selectTab = "")
         {
+/*            TabSelectModel tabSelect = new TabSelectModel
+            {
+                TabName = selectTab
+            };*/
+
             ViewBag.projectID = projectID;
+            ViewBag.selectTab = selectTab;
+            ViewBag.projectName = ProjectProcessor.GetProjectName(projectID);
+            ViewBag.viewLocation = "ManageIssues";
+
             return View();
         }
 
@@ -98,37 +156,12 @@ namespace IssueTracker.Controllers
         }
 
         [HttpGet]
-        public ActionResult ViewIssuesForProjectPartialView(int projectID)
+        public ActionResult ViewIssuesForProjectPartialView(int projectID, string viewLocation = "")
         {
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var issues = ConvertToModel(IssueProcessor.ViewIssuesForProject(projectID));
+            ViewBag.viewLocation = viewLocation;
 
-            var data = IssueProcessor.ViewIssuesForProject(projectID);
-            List<IssueModel> issues = new List<IssueModel>();
-            
-            foreach (var row in data)
-            {
-                var user = userManager.FindById(row.AuthorID);
-                var assignee = userManager.FindById(row.AssigneeID);
-
-                issues.Add(new IssueModel
-                {
-                    AuthorID = row.AuthorID,
-                    AuthorName = user.FirstName + " " + user.LastName,
-                    AssigneeID = row.AssigneeID,
-                    AssigneeName = assignee != null ? assignee.FirstName + " " + assignee.LastName : "",
-                    Description = row.Description,
-                    DateTimeCreated = row.DateTimeCreated,
-                    DateTimeDeadline = row.DateTimeDeadline,
-                    DateTimeUpdated = row.DateTimeUpdated,
-                    Status = row.Status,
-                    Priority = row.Priority,
-                    IssueID = row.IssueId,
-                    Type = row.Type,
-                    Name = row.Name
-                });
-            }
-
-            return PartialView(issues);
+            return PartialView("ViewIssues", issues);
         }
 
         public ActionResult CreateIssuePartialView()
@@ -156,7 +189,14 @@ namespace IssueTracker.Controllers
                     model.Priority,
                     model.ProjectID);
 
-                recordsCreated = ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), model.ProjectID, dateTimeCreated, " created a new issue.");
+
+                // create activity
+                var user = userManager.FindById(User.Identity.GetUserId());
+                string projectName = ProjectProcessor.GetProjectName(model.ProjectID);
+
+                string activityConntet = string.Format("{0} has created a new issue, issue: {1}, in project: {2}.", user.FirstName + " " + user.LastName, model.Name, projectName);
+                recordsCreated = ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), model.ProjectID, dateTimeCreated, activityConntet);
+
                 // create notification for assigneed user if there is one
 
                 if (model.AssigneeID != null)
@@ -164,8 +204,6 @@ namespace IssueTracker.Controllers
                     // do not notify assignee, if issue creator is assignee
                     if(model.AssigneeID != User.Identity.GetUserId())
                     {
-                        var user = userManager.FindById(User.Identity.GetUserId());
-                        string projectName = ProjectProcessor.GetProjectName(model.ProjectID);
                         string notificationContent = string.Format("{0} has assigneed you to the issue: {1}, in project: {2}.", (user.FirstName + " " + user.LastName), model.Name, projectName);
                         NotificationProcessor.CreateNotification(model.AssigneeID, notificationContent);
                     }
@@ -181,64 +219,22 @@ namespace IssueTracker.Controllers
 
         // new stuff for view issue
 
-        public ActionResult ViewIssue(int issueID)
+        // ViewIssue and its partial views
+        public ActionResult ViewIssue(int issueID, string cameFrom = "")
         {
-            ViewBag.issueID = issueID; 
-            
-            var data = IssueProcessor.ViewIssue(issueID);
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-            var user = userManager.FindById(data.AuthorID);
-            var assignee = userManager.FindById(data.AssigneeID);
-
-            IssueModel issue = new IssueModel
-            {
-                AuthorID = data.AuthorID,
-                AuthorName = user.FirstName + " " + user.LastName,
-                AssigneeID = data.AssigneeID,
-                AssigneeName = assignee != null ? assignee.FirstName + " " + assignee.LastName : "",
-                Description = data.Description,
-                DateTimeCreated = data.DateTimeCreated,
-                DateTimeDeadline = data.DateTimeDeadline,
-                DateTimeUpdated = data.DateTimeUpdated,
-                Status = data.Status,
-                Priority = data.Priority,
-                IssueID = data.IssueId,
-                ProjectID = data.ProjectID,
-                Type = data.Type,
-                Name = data.Name
-            };
-
+            var issue = ConvertSingleModel(IssueProcessor.ViewIssue(issueID));
 
             ViewBag.isCreator = (issue.AuthorID == User.Identity.GetUserId());
+            // for comment partial view
+            ViewBag.issueID = issueID;
+            ViewBag.cameFrom = cameFrom;
+
             return View(issue);
         }
 
         public ActionResult EditIssuePartialView(int issueID)
         {
-            var data = IssueProcessor.ViewIssue(issueID);
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-
-            var user = userManager.FindById(data.AuthorID);
-            var assignee = userManager.FindById(data.AssigneeID);
-
-            IssueModel issue = new IssueModel
-            {
-                AuthorID = data.AuthorID,
-                AuthorName = user.FirstName + " " + user.LastName,
-                AssigneeID = data.AssigneeID,
-                AssigneeName = assignee != null ? assignee.FirstName + " " + assignee.LastName : "",
-                Description = data.Description,
-                DateTimeCreated = data.DateTimeCreated,
-                DateTimeDeadline = data.DateTimeDeadline,
-                DateTimeUpdated = data.DateTimeUpdated,
-                Status = data.Status,
-                Priority = data.Priority,
-                IssueID = data.IssueId,
-                Type = data.Type,
-                Name = data.Name,
-                ProjectID = data.ProjectID
-            };
+            var issue = ConvertSingleModel(IssueProcessor.ViewIssue(issueID));
 
             return PartialView(issue);
         }
@@ -250,23 +246,41 @@ namespace IssueTracker.Controllers
         {
             if (data.Description.Length < 200)
             {
-                int recordsUpdated = IssueProcessor.UpdateIssueDescription(data.IssueID, data.Description);
-                
+                int recordsUpdated = IssueProcessor.UpdateIssue(data.IssueID,
+                                                            data.Description,
+                                                            data.DateTimeDeadline,
+                                                            data.Priority,
+                                                            data.Type,
+                                                            data.Status,
+                                                            data.AssigneeID);
+
                 // succesfull
                 if(recordsUpdated == 1)
                 {
-                    // create activity, but before that update the way its created
+                    // should add 
+                    // when assigneed user is changed they should be notified that they are not on it anymore
+                    // then notify new assignee
 
+                    // create activity, but before that update the way its created
                     ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                     var editor = userManager.FindById(User.Identity.GetUserId());
                     string projectName = ProjectProcessor.GetProjectName(data.ProjectID);
+
+                    string activityConntet = string.Format("{0} has edited the issue: {1}, in project: {2}.", editor.FirstName + " " + editor.LastName, data.Name, projectName);
+                    ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), data.ProjectID, DateTime.Now, activityConntet);
+                    ActivityProcessor.CreateIssueActivity(User.Identity.GetUserId(), data.IssueID, DateTime.Now, activityConntet);
+
                     string notificationContent = "";
 
                     // Create notification for issue assignee
                     if (data.AssigneeID != null)
                     {
-                        notificationContent = string.Format("{0} has edited the issue: {1}, which you are assigned to, in project: {2}.", (editor.FirstName + " " + editor.LastName), data.Name, projectName);
-                        NotificationProcessor.CreateNotification(data.AssigneeID, notificationContent);
+                        if(data.AssigneeID != "")
+                        {
+                            notificationContent = string.Format("{0} has edited the issue: {1}, which you are assigned to, in project: {2}.", (editor.FirstName + " " + editor.LastName), data.Name, projectName);
+                            NotificationProcessor.CreateNotification(data.AssigneeID, notificationContent);
+
+                        }
                     }
                     // do not send notif to creator if creator is the one editing
                     if (data.AuthorID != User.Identity.GetUserId())
@@ -284,7 +298,7 @@ namespace IssueTracker.Controllers
             return RedirectToAction("ViewIssue", "Issue", new {issueID = data.IssueID });
         }
 
-
+        // ViewIssue and its partial views
 
 
         // NEED HTTP POST FOR EDITING ISSUES

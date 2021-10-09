@@ -9,7 +9,7 @@
 
 
 <p>
-    @Html.ActionLink("Create New", "CreateProject", "Project", null, null)
+    @Html.ActionLink("New project", "CreateProject", "Project", null, null)
 </p>
 <table class="table">
     <thead>
@@ -63,8 +63,10 @@
     <script>
         $(document).ready(function () {
             $('.table').DataTable({
-                paging: true,
-                ordering: true
+                columnDefs: [
+                    { orderable: false, targets: 4 }
+                ],
+                "order": [[3, "asc"]]
             });
         });
     </script>

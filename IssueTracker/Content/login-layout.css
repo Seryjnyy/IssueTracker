@@ -1,0 +1,99 @@
+﻿.notificationBox {
+    display: none;
+    position: absolute;
+    margin-top: -2px;
+    width: 250px;
+    right: 5px;
+    height: auto;
+    color: #fff;
+}
+
+.notification-content {
+    width: 100%;
+    background-color: #372772;
+    margin-top: 10px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+}
+
+.notificationBox .notification-content ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 5px;
+    width: 96%;
+    padding-left: 2%;
+}
+
+    .notificationBox .notification-content ul li {
+        margin-top: 15px;
+        margin-bottom: 5px;
+        background-color: #392B6D;
+        border-radius: 10px;
+    }
+
+#notifications-navbar {
+    height: auto;
+}
+
+.notification-date {
+    font-size: 12px;
+}
+
+.notification-bottom {
+    width: 100%;
+    height: 46px;
+    display: flex;
+    align-items: center;
+}
+
+    .notification-bottom a {
+        text-align: center;
+    }
+
+.profileBox {
+    display: none;
+    position: absolute;
+    margin-top: -2px;
+    width: 150px;
+    right: 5px;
+    height: auto;
+    color: #fff;
+}
+
+.profile-content {
+    width: 100%;
+    height: auto;
+    background-color: #332e69;
+    padding: 5px;
+    margin-top: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .profile-content a {
+        margin-top: 10px;
+        width: 100%;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+.showNotification {
+    display: block;
+}
+
+.profileBox .profile-content form#logoutForm {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    margin-bottom: 15px;
+}
+
+    .profileBox .profile-content form#logoutForm a {
+        height: 40px;
+        width: 100%;
+        z-index: 999999;
+    }

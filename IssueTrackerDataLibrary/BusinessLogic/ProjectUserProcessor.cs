@@ -8,6 +8,13 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 {
     public static class ProjectUserProcessor
     {
+        public static string FindUserIdThrougProjectUserID(int projectUserID)
+        {
+            string sql = string.Format("select UserID from dbo.ProjectUser where ProjectUserId = {0};", projectUserID);
+
+            return SqlDataAccess.LoadData<string>(sql)[0];
+        }
+
         public static int RemoveProjectUser(int projectUserID)
         {
             string sql = string.Format("delete from dbo.ProjectUser where ProjectUserId = {0};", projectUserID);

@@ -38,6 +38,10 @@ namespace IssueTracker.Models
 
         public int IssueID { get; set; }
 
+        public int CommentID { get; set; }
+
+        public bool UserIsAuthor { get; set; }
+
 
     }
 }

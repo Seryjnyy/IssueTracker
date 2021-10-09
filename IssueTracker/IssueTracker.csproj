@@ -196,7 +196,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
@@ -205,7 +207,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\UserHelper.cs" />
     <Compile Include="Migrations\202108261301114_InitialCreate.cs" />
     <Compile Include="Migrations\202108261301114_InitialCreate.Designer.cs">
       <DependentUpon>202108261301114_InitialCreate.cs</DependentUpon>
@@ -218,12 +219,16 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityModel.cs" />
     <Compile Include="Models\CommentModel.cs" />
+    <Compile Include="Models\DataStats\DataCountModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IssueModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\NotificationModel.cs" />
+    <Compile Include="Models\ViewModel\DashboardViewModel.cs" />
+    <Compile Include="Models\ViewModel\ProfileViewModel.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\ProjectUserModel.cs" />
+    <Compile Include="Models\TabSelectModel.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -233,7 +238,9 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\dashboard.css" />
     <Content Include="Content\sidebar.css" />
+    <Content Include="Content\tabsystem.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -275,6 +282,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\login-layout.css" />
     <Content Include="DataTables\DataTables-1.11.2\css\dataTables.bootstrap.css" />
     <Content Include="DataTables\DataTables-1.11.2\css\dataTables.bootstrap.min.css" />
     <Content Include="DataTables\DataTables-1.11.2\css\dataTables.bootstrap4.css" />
@@ -644,6 +652,14 @@
     <Content Include="Views\Issue\ViewAllIssues.cshtml" />
     <Content Include="Views\Issue\ViewIssuesYouCreated.cshtml" />
     <Content Include="Views\Issue\ViewIssuesAssigendToYou.cshtml" />
+    <Content Include="Views\Activity\ViewActivityPartialView.cshtml" />
+    <Content Include="Views\Activity\ViewAllUserActivityPartialView.cshtml" />
+    <Content Include="Views\Issue\ManageIssues.cshtml" />
+    <Content Include="Views\Dashboard\ViewDashboard.cshtml" />
+    <Content Include="Views\Account\LoginRegister.cshtml" />
+    <Content Include="Views\Issue\selectOptions\_Type.cshtml" />
+    <Content Include="Views\Issue\selectOptions\_Status.cshtml" />
+    <Content Include="Views\Issue\selectOptions\_Priority.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

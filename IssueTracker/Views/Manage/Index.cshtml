@@ -1,30 +1,34 @@
-﻿@model IssueTracker.Models.IndexViewModel
+﻿@*@model IssueTracker.Models.IndexViewModel
+@model IssueTracker.Models.TabSelectModel*@
+@model IssueTracker.Models.ProfileViewModel
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Profile";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Change your account settings</h4>
-    <hr />
     <ul class="nav nav-tabs">
-        <li class="nav-item active">
+        <li class="nav-item" id="listAccount">
             <a href="#accountSettings" class="nav-link" data-toggle="tab">Account settings</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" id="listNotifications">
             <a href="#notifications" class="nav-link" data-toggle="tab">Notifications</a>
+        </li>
+        <li class="nav-item" id="listActivity">
+            <a href="#userActivity" class="nav-link" data-toggle="tab">Your activity</a>
         </li>
     </ul>
 
-    <div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+    <div class="tab-content">
         <div class="tab-pane fade" id="accountSettings">
+            <h4>Change your account settings</h4>
             <dl class="dl-horizontal">
                 <dt>Password:</dt>
                 <dd>
                     [
-                    @if (Model.HasPassword)
+                    @if (Model.IndexView.HasPassword)
                     {
                         @Html.ActionLink("Change your password", "ChangePassword")
                     }
@@ -36,36 +40,36 @@
                 </dd>
                 <dt>External Logins:</dt>
                 <dd>
-                    @Model.Logins.Count [
+                    @Model.IndexView.Logins.Count [
                     @Html.ActionLink("Manage", "ManageLogins") ]
                 </dd>
                 @*
-        Phone Numbers can used as a second factor of verification in a two-factor authentication system.
+            Phone Numbers can used as a second factor of verification in a two-factor authentication system.
 
-         See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-            for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+             See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
 
-         Uncomment the following block after you have set up two-factor authentication
+             Uncomment the following block after you have set up two-factor authentication
                 *@
                 @*
-        <dt>Phone Number:</dt>
-        <dd>
-            @(Model.PhoneNumber ?? "None")
-            @if (Model.PhoneNumber != null)
-            {
-                <br />
-                <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            <dt>Phone Number:</dt>
+            <dd>
+                @(Model.PhoneNumber ?? "None")
+                @if (Model.PhoneNumber != null)
                 {
-                    @Html.AntiForgeryToken()
-                    <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
+                    <br />
+                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
+                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <text>[<input type="submit" value="Remove" class="btn-link" />]</text>
+                    }
                 }
-            }
-            else
-            {
-                <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
-            }
-        </dd>
+                else
+                {
+                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
+                }
+            </dd>
                 *@
                 <dt>Two-Factor Authentication:</dt>
                 <dd>
@@ -74,30 +78,33 @@
                         for details on setting up this ASP.NET application to support two-factor authentication.
                     </p>
                     @*@if (Model.TwoFactor)
-            {
-                using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
-                    @Html.AntiForgeryToken()
-                    <text>Enabled
-                    <input type="submit" value="Disable" class="btn btn-link" />
-                    </text>
+                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <text>Enabled
+                        <input type="submit" value="Disable" class="btn btn-link" />
+                        </text>
+                    }
                 }
-            }
-            else
-            {
-                using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                else
                 {
-                    @Html.AntiForgeryToken()
-                    <text>Disabled
-                    <input type="submit" value="Enable" class="btn btn-link" />
-                    </text>
-                }
-            }*@
+                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <text>Disabled
+                        <input type="submit" value="Enable" class="btn btn-link" />
+                        </text>
+                    }
+                }*@
                 </dd>
             </dl>
         </div>
         <div class="tab-pane fade" id="notifications">
             <div id="partialViewNotifications"></div>
+        </div>
+        <div class="tab-pane fade" id="userActivity">
+            <div id="partialViewUserActivity"></div>
         </div>
     </div>
 
@@ -105,19 +112,53 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            $("#accountSettings").addClass("active in");
 
-            
+                switch ("@Model.TabSelect.TabName") {
+                    case "Notifications":
+                        $("#listNotifications").addClass("active");
+                        $("#notifications").addClass("active in");
+                        break;
+                    case "UserActivity":
+                        $("#listActivity").addClass("active");
+                        $("#userActivity").addClass("active in");
+                        break;
+                    default:
+                        $("#listAccount").addClass("active");
+                        $("#accountSettings").addClass("active in");
+                }
+
+
+
+
+
+
+
             $.ajax({
                 url: '/Notification/ViewNotifications',
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'html',
                 success: function (result) {
-                    
-                    $('#partialViewNotifications').html("hellofsdfsefefoehw809fh298h");
                     $('#partialViewNotifications').html(result);
-                    $('#notificationTable').DataTable({});
+                    $('#notificationTable').DataTable({
+                        "order": [[1, "desc"]]
+                    });
+                },
+                error: function () {
+                    alert(status);
+                }
+            });
+
+            $.ajax({
+                url: '/Activity/ViewAllUserActivityPartialView',
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#partialViewUserActivity').html(result);
+                    $('#activityTable').DataTable({
+                        "order": [[1, "desc"]]
+                    });
                 },
                 error: function () {
                     alert(status);

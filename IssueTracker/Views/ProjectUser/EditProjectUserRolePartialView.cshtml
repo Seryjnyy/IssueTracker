@@ -7,8 +7,8 @@
 @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>ProjectUserModel</h4>
-    <hr />
+@*    <h4>ProjectUserModel</h4>
+    <hr />*@
     @if (ViewBag.editUserMessage != null)
     {
 
@@ -33,12 +33,15 @@
     <div class="form-group">
         <label class="control-label col-md-2" for="roleSelect">Select role</label>
         <div class="col-md-10">
-                <select name="Role" class="form-control">
-                    <option value="Developer">Developer</option>
-                    <option value="Project Manager">Project Manager</option>
+            <select name="Role" class="form-control">
+                <option value="Developer">Developer</option>
+                <option value="Project Manager">Project Manager</option>
+                @if (ViewBag.isCreator)
+                {
                     <option value="Admin">Admin</option>
-                    <option value="Submitter">Submitter</option>
-                </select>
+                }
+                <option value="Submitter">Submitter</option>
+            </select>
                 <span class="field-validation-valid text-danger" data-valmsg-for="roleSelect" data-valmsg-replace="true"></span>
 </div>
     </div>

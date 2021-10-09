@@ -4,7 +4,7 @@
     ViewBag.Title = "ViewIssue";
 }
 
-<h2>ViewIssue</h2>
+<h2>Issue - @Model.Name</h2>
 
 <ul class="nav nav-tabs">
     <li class="nav-item active">
@@ -24,12 +24,18 @@
     </li>
 </ul>
 
-<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+<div class="tab-content">
     <div class="tab-pane fade" id="about">
         <div>
-            <h4>IssueModel</h4>
-            <hr />
             <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
                 <dt>
                     @Html.DisplayNameFor(model => model.Description)
                 </dt>
@@ -55,20 +61,35 @@
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.IssueID)
+                    @Html.DisplayNameFor(model => model.Status)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.IssueID)
+                    @Html.DisplayFor(model => model.Status)
                 </dd>
 
                 <dt>
-                    @Html.DisplayNameFor(model => model.AuthorID)
+                    @Html.DisplayNameFor(model => model.Type)
                 </dt>
 
                 <dd>
-                    @Html.DisplayFor(model => model.AuthorID)
+                    @Html.DisplayFor(model => model.Type)
                 </dd>
+                @*                <dt>
+                @Html.DisplayNameFor(model => model.IssueID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IssueID)
+            </dd>*@
+
+                @*                <dt>
+                @Html.DisplayNameFor(model => model.AuthorID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AuthorID)
+            </dd>*@
 
                 <dt>
                     @Html.DisplayNameFor(model => model.AuthorName)
@@ -78,13 +99,13 @@
                     @Html.DisplayFor(model => model.AuthorName)
                 </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.AssigneeID)
-                </dt>
+                @*                <dt>
+                @Html.DisplayNameFor(model => model.AssigneeID)
+            </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.AssigneeID)
-                </dd>
+            <dd>
+                @Html.DisplayFor(model => model.AssigneeID)
+            </dd>*@
 
                 <dt>
                     @Html.DisplayNameFor(model => model.AssigneeName)
@@ -110,42 +131,29 @@
                     @Html.DisplayFor(model => model.DateTimeUpdated)
                 </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.ProjectID)
-                </dt>
+                @*                <dt>
+                @Html.DisplayNameFor(model => model.ProjectID)
+            </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.ProjectID)
-                </dd>
+            <dd>
+                @Html.DisplayFor(model => model.ProjectID)
+            </dd>*@
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Status)
-                </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Status)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Type)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Type)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Name)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
 
             </dl>
             @if (ViewBag.isCreator)
             {
-                @Html.ActionLink("Remove Issue", "RemoveIsse", "Issue", null, null);
+                using (Html.BeginForm("RemoveIssue", "Issue", FormMethod.Post, new { id = "removeIssueForm" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <a href="#" onclick="this.closest('form').submit();return false;">Remove issue</a>
+                    <input name="IssueID" style="display:none" value="@Model.IssueID" />
+                    <input name="ProjectID" style="display:none" value="@Model.ProjectID" />
+                    <input name="Name" style="display:none" value="@Model.Name" />
+                    <input name="cameFrom" style="display:none" value="@ViewBag.cameFrom" />
+                }
             }
         </div>
     </div>
@@ -155,26 +163,31 @@
             <div id="editIssue"></div>
         </div>
     }
-    <div class="tab-pane fade" id="comments">
-        @Html.Partial("../Comment/CreateCommentForIssuePartialView", new IssueTracker.Models.CommentModel { })
-        <div id="viewComments"></div>
-    </div>
+<div class="tab-pane fade" id="comments">
+    @* I dont think passing empty model is necesary, if you remove the using_model in the view*@
+    <div id="viewComments"></div>
+    @Html.Partial("../Comment/CreateCommentForIssuePartialView", new IssueTracker.Models.CommentModel { })
+</div>
     <div class="tab-pane fade" id="activity">
         <div id="viewActivity"></div>
     </div>
 </div>
 
+<p>
+    @Html.ActionLink("Back to manage issues", "ManageIssues", "Issue", new {projectID = Model.ProjectID }, null)
+</p>
+
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
+<script>
         $(document).ready(function () {
             $("#about").addClass("active in");
 
 
         });
 
-            var issueID = @ViewBag.issueID;
+            var issueID = @Model.IssueID;
             $.ajax({
                 url: '/Issue/EditIssuePartialView',
                 data: {
@@ -185,6 +198,9 @@
                 dataType: 'html',
                 success: function (result) {
                     $('#editIssue').html(result);
+                    $('#selectPriority option[value="@Model.Priority"]').prop("selected", true);
+                    $('#selectStatus option[value="@Model.Status"]').prop("selected", true);
+                    $('#selectType option[value="@Model.Type"]').prop("selected", true);
                 },
                 error: function () {
                     alert(status);
@@ -201,10 +217,15 @@
                 dataType: 'html',
                 success: function (result) {
                     $('#viewComments').html(result);
-                    $('#commentTable').DataTable({});
+                    $('#commentTable').DataTable({
+                        "order": [[2, "desc"]],
+                        columnDefs: [
+                            { orderable: false, targets: 3 }
+                        ]
+                    });
+
                 },
                 error: function () {
-                    alert(status);
                 }
             });
 
@@ -218,13 +239,46 @@
                 dataType: 'html',
                 success: function (result) {
                     $('#viewActivity').html(result);
-                    $('#activityTable').DataTable({});
+                    $('#activityTable').DataTable({
+                        "order" : [[1, 'desc']],
+                    });
                 },
                 error: function () {
                     alert(status);
                 }
             });
 
-    </script>
+        $.ajax({
+            url: '/Issue/AllEmailAndIDInProject',
+            data: {
+                projectID: @Model.ProjectID
+            },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#selectAssignee').html(result);
+                $('#selectAssignee').append('<option value=""></option>');
+                $('#selectAssignee option[value="@Model.AssigneeID"]').prop("selected", true);
+                
+
+
+            },
+            error: function () {
+                alert(status);
+            }
+        });
+
+</script>
+
+    @*Edit issue stuff*@
+<script>
+        $(document).ready(function () {
+
+            
+
+
+        });
+</script>
 
 }

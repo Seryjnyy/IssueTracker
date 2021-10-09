@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<IssueTracker.Models.IssueModel>
 
-<table class="table" id="issuesAssignedTable">
+<table class="table" id="issueTable">
     <thead>
         <tr>
             <th>
@@ -76,7 +76,7 @@
                     @Html.DisplayFor(modelItem => item.DateTimeCreated)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "ViewIssue", "Issue", new { issueID = item.IssueID }, null)
+                    @Html.ActionLink("Details", "ViewIssue", "Issue", new { issueID = item.IssueID, cameFrom = "ViewAllIssues"}, null)
                 </td>
 
                 @*            <td>

@@ -14,50 +14,48 @@ namespace IssueTracker.Controllers
     [Authorize]
     public class ActivityController : Controller
     {
-        public ActionResult ViewActivityForIssuePartialView(int issueID)
+        public ActionResult ViewAllUserActivityPartialView()
         {
-            var data = ActivityProcessor.ViewActivityForIssue(issueID);
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            List<ActivityModel> activities = new List<ActivityModel>();
-
-            foreach (var row in data)
-            {
-                var user = userManager.FindById(row.UserID);
-                activities.Add(new ActivityModel
-                {
-                    UserID = row.UserID,
-                    IssueID = row.IssueID,
-                    DateTimeCreated = row.DateTimeCreated,
-                    ActivityContent = row.ActivityContent,
-                    UserName = user.FirstName + " " + user.LastName
-                });
-            };
-            return PartialView("ViewActivityForProjectPartialView", activities);
+            return PartialView("ViewActivityPartialView", FindActivityForUser());
         }
 
-        [HttpGet]
+        public ActionResult ViewActivityForIssuePartialView(int issueID)
+        {
+            return PartialView("ViewActivityPartialView", FindActivityForIssue(issueID));
+        }
+
+
         public PartialViewResult ViewActivityForProjectPartialView(int projectID)
         {
-            ViewBag.projectID = projectID;
-            return PartialView(FindActivityForProject(projectID));
+            return PartialView("ViewActivityPartialView", FindActivityForProject(projectID));
+        }
+        public List<ActivityModel> FindActivityForUser()
+        {
+            var data = ActivityProcessor.ViewAllUserActivity(User.Identity.GetUserId());
+            return ConvertToModel(data);
         }
 
         public List<ActivityModel> FindActivityForProject(int projectID)
         {
             var data = ActivityProcessor.ViewActivityForProject(projectID);
-            ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            return ConvertToModel(data);
+        }
+        public List<ActivityModel> FindActivityForIssue(int issueID)
+        {
+            var data = ActivityProcessor.ViewActivityForIssue(issueID);
+            return ConvertToModel(data);
+        }
+
+        private List<ActivityModel> ConvertToModel(List<IssueTrackerDataLibrary.Models.ActivityModel> data)
+        {
             List<ActivityModel> activities = new List<ActivityModel>();
 
             foreach (var row in data)
             {
-                var user = userManager.FindById(row.UserID);
                 activities.Add(new ActivityModel
                 {
-                    UserID = row.UserID,
-                    ProjectID = row.ProjectID,
                     DateTimeCreated = row.DateTimeCreated,
                     ActivityContent = row.ActivityContent,
-                    UserName = user.FirstName + " " + user.LastName
                 });
             };
 

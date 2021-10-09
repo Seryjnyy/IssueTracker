@@ -25,6 +25,8 @@ namespace IssueTrackerDataLibrary.Models
 
         public int IssueID { get; set; }
 
+        public int CommentID { get; set; }
+
 
     }
 }

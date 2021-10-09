@@ -1,20 +1,21 @@
-﻿
+﻿@model IssueTracker.Models.IssueModel
 @{
     ViewBag.Title = "Manage issues";
 }
 
 <h2>Manage issues</h2>
+<h4>Project - @ViewBag.projectName</h4>
 
 <ul class="nav nav-tabs">
-    <li class="nav-item active">
+    <li class="nav-item" id="listIssues">
         <a href="#issues" class="active" data-toggle="tab">Issues</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" id="listCreateIssue">
         <a href="#createIssue" class="nav-link" data-toggle="tab">Create Issue</a>
     </li>
 </ul>
 
-<div class="tab-content" style="margin-bottom:50px;margin-top:50px">
+<div class="tab-content">
     <div class="tab-pane fade" id="issues">
         <div id="viewIssues"></div>
     </div>
@@ -23,50 +24,68 @@
     </div>
 </div>
 
+<p>
+    @Html.ActionLink("Back to project", "ViewProject", "Project", new { projectID = ViewBag.projectID }, null)
+</p>
+
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
 
     <script>
-        $(document).ready(function () {
-            $("#issues").addClass("active");
-            $("#issues").addClass("in");
+    $(document).ready(function () {
+        switch ("@ViewBag.selectTab") {
+            case "CreateIssue":
+                $("#listCreateIssue").addClass("active");
+                $("#createIssue").addClass("active in");
+                break;
+            default:
+                $("#listIssues").addClass("active");
+                $("#issues").addClass("active in");
+        }
 
-            var projectID = @ViewBag.projectID;
-            $.ajax({
-                url: '/Issue/ViewIssuesForProjectPartialView',
-                data: {
-                    projectID: projectID
-                },
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html',
-                success: function (result) {
-                    $('#viewIssues').html(result);
-                    $('#issueTable').DataTable({});
-                },
-                error: function () {
-                    alert(status);
-                }
-            });
 
-@*            $.ajax({
-                url: '/Issue/AllEmailAndIDInProject',
-                data: {
-                    projectID: projectID
-                },
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html',
-                success: function (result) {
-                    var data = JSON.parse(result);
-                    for (var i = 0; i < data.length; i++) {
-                        $("#createIssueSelectEmail").append("<option value=" + data[i].UserID + ">" + data[i].UserEmail + "</option>");
-                    }             
-                },
-                error: function () {
-                    alert(status);
+        var projectID = @ViewBag.projectID;
+        $.ajax({
+            url: '/Issue/ViewIssuesForProjectPartialView',
+            data: {
+                projectID: projectID,
+                viewLocation: "ManageIssues"
+            },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $('#viewIssues').html(result);
+                $('#issueTable').DataTable({
+                    "order": [[7, "desc"]],
+                    columnDefs: [
+                        { orderable: false, targets: 8 }
+                    ]
+                });
+            },
+            error: function () {
+                alert(status);
+            }
+        });
+
+        @* $.ajax({
+            url: '/Issue/AllEmailAndIDInProject',
+            data: {
+                projectID: projectID
+            },
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                var data = JSON.parse(result);
+                for (var i = 0; i < data.length; i++) {
+                    $("#createIssueSelectEmail").append("<option value=" + data[i].UserID + ">" + data[i].UserEmail + "</option>");
                 }
-            });*@
+            },
+            error: function () {
+                alert(status);
+            }
+        });*@
 
         });
 

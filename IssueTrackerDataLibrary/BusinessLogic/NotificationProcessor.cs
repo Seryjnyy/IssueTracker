@@ -17,14 +17,14 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 
         public static List<NotificationModel> AllNotificationsForUser(string userID)
         {
-            string sql = string.Format("select * from dbo.Notification where UserID = '{0}';", userID);
+            string sql = string.Format("select * from dbo.Notification where UserID = '{0}' order by DateTimeCreated desc;", userID);
 
             return SqlDataAccess.LoadData<NotificationModel>(sql);
         }
 
         public static List<NotificationModel> ThreeNewestNotifications(string userID)
         {
-            string sql = string.Format("select top 3 * from dbo.Notification where UserID = '{0}';", userID);
+            string sql = string.Format("select top 3 * from dbo.Notification where UserID = '{0}' order by DateTimeCreated desc;", userID);
 
             return SqlDataAccess.LoadData<NotificationModel>(sql);
         }

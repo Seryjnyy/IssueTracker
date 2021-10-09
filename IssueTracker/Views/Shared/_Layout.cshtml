@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" type="text/css" href="~/DataTables/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/sidebar.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/login-layout.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/tabsystem.css" />
     <link rel="stylesheet" type="text/css" href="~/Selectize/css/selectize.css" />
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -21,61 +23,80 @@
         </div>
         <ul class="sidebar-nav">
             <li>
-                <a href="@Url.Action("Index", "Home")">
+                <a href="@Url.Action("ViewDashboard", "Dashboard")">
                     <i class="bx bx-grid-alt"></i>
                     <span class="sidebar-nav-link">Dashboard</span>
                 </a>
                 <span class="tooltip">Dashboard</span>
             </li>
-            <li>
+            <li class="sidebar-link-grow">
                 <a href="@Url.Action("Index", "Manage")">
                     <i class="bx bx-user"></i>
-                    <span class="sidebar-nav-link">Profile</span>
+                    <span class="sidebar-nav-link">Profile <span style="font-size:10px;"> &#9660;</span></span>
                 </a>
                 <span class="tooltip">Profile</span>
+
+                <ul>
+                    <li>
+                        <a href="@Url.Action("Index", "Manage")">
+                            <span class="sidebar-nav-link">View profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Manage", new { selectTab = "Notifications"})">
+                            <span class="sidebar-nav-link">View Notifications</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Manage", new { selectTab = "UserActivity"})">
+                            <span class="sidebar-nav-link">View Activity</span>
+                        </a>
+                    </li>
+                </ul>
+
             </li>
-            <li @*class="sidebar-link-grow"*@>
+            <li class="sidebar-link-grow">
                 <a href="@Url.Action("ViewProjects", "Project")">
                     <i class="bx bx-list-ul"></i>
-                    <span class="sidebar-nav-link">Project @* &#9660;*@</span>
+                    <span class="sidebar-nav-link">Project  <span style="font-size:10px;"> &#9660;</span></span>
                 </a>
                 <span class="tooltip">Project</span>
 
-                @*                <ul>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-nav-link">Your projects</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-nav-link">All projects</span>
-                            </a>
-                        </li>
-                    </ul>*@
+                <ul>
+                    <li>
+                        <a href="@Url.Action("ViewProjects", "Project")">
+                            <span class="sidebar-nav-link">Your projects</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("CreateProject", "Project")">
+                            <span class="sidebar-nav-link">New project</span>
+                        </a>
+                    </li>
+                </ul>
 
 
             </li>
-            <li @*class="sidebar-link-grow"*@>
+            <li class="sidebar-link-grow">
                 <a href="@Url.Action("ViewAllIssues", "Issue")">
                     <i class="bx bx-list-ul"></i>
-                    <span class="sidebar-nav-link">Issue   @*&#9660;*@</span>
+                    <span class="sidebar-nav-link">Issue  <span style="font-size:10px;"> &#9660;</span></span>
                 </a>
 
                 <span class="tooltip">Issue</span>
 
-                @*                <ul>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-nav-link">Your issues</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <span class="sidebar-nav-link">All issues</span>
-                            </a>
-                        </li>
-                    </ul>*@
+                <ul>
+                    <li>
+                        <a href="@Url.Action("ViewAllIssues", "Issue")">
+                            <span class="sidebar-nav-link">Issues you created</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("ViewAllIssues", "Issue", new { selectTab = "AssigneedIssue"})">
+                            <span class="sidebar-nav-link">Issues assigneed to you</span>
+                        </a>
+                    </li>
+                </ul>
 
             </li>
             <li class="sidebar-profile">
@@ -96,7 +117,7 @@
         </div>
     </div>
 
-    <div class="container body-content" style="padding-left:250px">
+    <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
@@ -107,13 +128,15 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js" integrity="sha256-bC3LCZCwKeehY6T4fFi9VfOU0gztUa+S4cnkIhVPZ5E=" crossorigin="anonymous"></script>
 
 
     @Scripts.Render("~/bundles/modernizr")
     @RenderSection("scripts", required: false)
     <script type="text/javascript" src="~/DataTables/datatables.min.js"></script>
     <script type="text/javascript" src="~/Selectize/js/standalone/selectize.min.js"></script>
+
+
     @*    <script>
             $(document).ready(function () {
                 $('.sidebar-button').on('click', function () {
@@ -135,11 +158,13 @@
         function menuBtnChange() {
             if (sidebar.classList.contains("open")) {
                 closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-                $(".body-content").css({ "padding-left": "250px" });
+                $(".body-content").css({ "padding-left": "200px" });
+                $(".sidebar .sidebar-link-grow ul").css({ "display": "block" });
 
             } else {
                 closeBtn.classList.replace("bx-menu-alt-right", "bx-menu");//replacing the iocns class
                 $(".body-content").css({ "padding-left": "78px" });
+                $(".sidebar .sidebar-link-grow ul").css({"display" : "none"});
             }
         }
 

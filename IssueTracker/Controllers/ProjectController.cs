@@ -21,6 +21,7 @@ namespace IssueTracker.Controllers
             ProjectModel project = new ProjectModel
             {
                 Description = data.Description,
+                Name = data.Name,
                 ProjectID = projectID
             };
 
@@ -35,6 +36,15 @@ namespace IssueTracker.Controllers
             {
                 int recordsCreated = ProjectProcessor.UpdateDescription(data.ProjectID, data.Description);
                 // could add error messages and that
+
+                // create project activity
+
+                // create activity
+                ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                var user = userManager.FindById(User.Identity.GetUserId());
+
+                string activityConntet = string.Format("{0} has edited the project: {1}.", user.FirstName + " " + user.LastName, data.Name);
+                recordsCreated = ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), data.ProjectID, DateTime.Now, activityConntet);
             }
 
             return RedirectToAction("ViewProject", new { projectId = data.ProjectID });
@@ -64,6 +74,8 @@ namespace IssueTracker.Controllers
                 ProjectID = data.ProjectID,
                 IsCreatorOrAdmin = isCreatorOrAdmin
             };
+
+            ViewBag.viewLocation = "ViewProject";
             return View(project);
         }
 

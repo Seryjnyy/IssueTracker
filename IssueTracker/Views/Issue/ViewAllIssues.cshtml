@@ -6,10 +6,10 @@
 <h2>View Issues related to you</h2>
 
 <ul class="nav nav-tabs">
-    <li class="nav-item active">
+    <li class="nav-item" id="listYourIssue">
         <a href="#yourIssues" class="nav-link" data-toggle="tab">Issues you created</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" id="listAssigneedIssue">
         <a href="#issuesAssignedYou" class="nav-link" data-toggle="tab">Issues assigned to you</a>
     </li>
 </ul>
@@ -26,7 +26,15 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            $("#yourIssues").addClass("active in");
+        switch ("@ViewBag.selectTab") {
+            case "AssigneedIssue":
+                $("#listAssigneedIssue").addClass("active");
+                $("#issuesAssignedYou").addClass("active in");
+                break;
+            default:
+                $("#listYourIssue").addClass("active");
+                $("#yourIssues").addClass("active in");
+        }
 
             $.ajax({
                 url: '/Issue/ViewIssuesYouCreated',
@@ -35,7 +43,7 @@
                 dataType: 'html',
                 success: function (result) {
                     $('#partialViewIssusCreated').html(result);
-                    $('#issuesCreatedTable').DataTable({});
+                    $('#issueTable').DataTable({});
                 },
                 error: function () {
                     alert(status);
@@ -49,7 +57,7 @@
                 dataType: 'html',
                 success: function (result) {
                     $('#partialViewIssusAssigned').html(result);
-                    $('#issuesAssignedTable').DataTable({});
+                    $('#issueTableAssigned').DataTable({});
                 },
                 error: function () {
                     alert(status);

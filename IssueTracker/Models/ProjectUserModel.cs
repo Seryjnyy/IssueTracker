@@ -40,6 +40,7 @@ namespace IssueTracker.Models
         /// <summary>
         /// Represents the users name.
         /// </summary>
+        [DisplayName("Name")]
         public string UserName { get; set; }
 
         public int ProjectUserID { get; set; }

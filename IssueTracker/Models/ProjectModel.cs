@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -39,6 +40,7 @@ namespace IssueTracker.Models
         /// Represents the creators name.
         /// First name and last name together.
         /// </summary>
+        [DisplayName("Creator")]
         public string CreatorName { get; set; }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace IssueTracker.Models
         /// Stored in the format YYYY-MM-DD HH:MI:SS.
         /// </summary>
         [DataType(DataType.DateTime)]
+        [DisplayName("Created")]
         public DateTime DateTimeCreated { get; set; }
 
         public bool IsCreatorOrAdmin { get; set; }

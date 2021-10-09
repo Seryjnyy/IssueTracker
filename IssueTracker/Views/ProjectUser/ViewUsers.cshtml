@@ -44,7 +44,7 @@
             </td>
             @*dont render remove for creator and admin*@
             <td>
-                @if (item.Role != "Admin" && item.Role != "Creator")
+                @if (item.Role != "Admin" && item.Role != "Creator" && ViewBag.isManageMembers != null)
                 {
                     @Html.ActionLink("Remove", "RemoveUserFromProject", new { item.ProjectUserID, item.ProjectID }@*, new { id = "removeUserLink" }*@)
                 }

@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<IssueTracker.Models.CommentModel>
 
 
+
 <table class="table" id="commentTable">
     <thead>
         <tr>
@@ -8,40 +9,37 @@
                 @Html.DisplayNameFor(model => model.Content)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateTimeCreated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AuthorID)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.AuthorName)
             </th>
-@*            <th></th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeCreated)
+            </th>
+            <th></th>
         </tr>
     </thead>
 
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Content)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeCreated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuthorID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AuthorName)
-                </td>
-@*                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>*@
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AuthorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTimeCreated)
+            </td>
+            <td>     
+                @if (item.UserIsAuthor)
+                {
+
+                    <a href="@Url.Action("RemoveComment", "Comment", new { commentID = item.CommentID, issueID = item.IssueID })" style="text-decoration: none;"><span style="font-weight:800;color:red;">X</span> </a>
+                }
+            </td>
+  
+        </tr>
         }
     </tbody>
 

@@ -26,6 +26,8 @@ namespace IssueTracker.Models
         [DisplayName("Deadline")]
         public DateTime DateTimeDeadline { get; set; }
 
+        public string DateTimeDeadlinePicker { get; set; }
+
         [Required]
         public string Status { get; set; }
 
@@ -50,6 +52,7 @@ namespace IssueTracker.Models
 
         // Not part of form
 
+        [DisplayName("Updated")]
         public DateTime DateTimeUpdated { get; set; }
 
         public int IssueID { get; set; }
@@ -58,14 +61,17 @@ namespace IssueTracker.Models
         /// </summary>
         public string AuthorID { get; set; }
 
+        [DisplayName("Author")]
         public string AuthorName { get; set; }
 
+        [DisplayName("Assignee")]
         public string AssigneeName { get; set; }
 
         /// <summary>
         /// Represents the time the issue was created.
         /// Stored in the format YYYY-MM-DD HH:MI:SS.
         /// </summary>
+        [DisplayName("Created")]
         public DateTime DateTimeCreated { get; set; }
 
         /// <summary>

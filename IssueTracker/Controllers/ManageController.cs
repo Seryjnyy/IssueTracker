@@ -52,7 +52,7 @@ namespace IssueTracker.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public async Task<ActionResult> Index(ManageMessageId? message, string selectTab = "")
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -72,7 +72,17 @@ namespace IssueTracker.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
-            return View(model);
+
+            ProfileViewModel viewModel = new ProfileViewModel
+            {
+                IndexView = model,
+                TabSelect = new TabSelectModel
+                {
+                    TabName = selectTab
+                }
+            };
+
+            return View(viewModel);
         }
 
         //

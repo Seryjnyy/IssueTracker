@@ -8,6 +8,48 @@ namespace IssueTrackerDataLibrary.BusinessLogic
 {
     public static class IssueProcessor
     {
+        // functions for chart visualisations
+
+        // these count the clsoed issues too, might need to be changed
+        public static List<DataCountModel> CountAllPriorities(string userID)
+        {
+            string sql = string.Format("select Priority as Name, count(Priority) as Count from dbo.Issue group by Priority;", userID);
+            return SqlDataAccess.LoadData<DataCountModel>(sql);
+        }
+
+        // these count the clsoed issues too, might need to be changed
+        public static List<DataCountModel> CountAllTypes(string userID)
+        {
+            string sql = string.Format("select Type as Name, count(Type) as Count from dbo.Issue group by Type;", userID);
+            return SqlDataAccess.LoadData<DataCountModel>(sql);
+        }
+
+        public static List<DataCountModel> CountAllStatus(string userID)
+        {
+            string sql = string.Format("select Status as Name, count(Status) as Count from dbo.Issue group by Status;", userID);
+            return SqlDataAccess.LoadData<DataCountModel>(sql);
+        }
+
+
+        // functions for chart visualisations
+
+        public static int UpdateIssue(int issueID, string description, DateTime dateTimeDeadline, string priority, string type, string status, string assigneeID)
+        {
+            IssueModel data = new IssueModel
+            {
+                IssueId = issueID,
+                Description = description,
+                DateTimeDeadline = dateTimeDeadline,
+                DateTimeUpdated = DateTime.Now,
+                Priority = priority,
+                Type = type,
+                Status = status,
+                AssigneeID = assigneeID
+            };
+
+            string sql = @"update dbo.Issue set Description = @Description, DateTimeDeadline = @DateTimeDeadline, Priority = @Priority, Type = @Type, Status = @Status, AssigneeID = @AssigneeID, DateTimeUpdated = @DateTimeUpdated where IssueId = @IssueID;";
+            return SqlDataAccess.SaveData(sql, data);        
+        }
 
         public static int UpdateIssueDescription(int issueID, string description)
         {

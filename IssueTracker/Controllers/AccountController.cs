@@ -22,6 +22,11 @@ namespace IssueTracker.Controllers
         {
         }
 
+/*        public ActionResult LoginRegister()
+        {
+            return View();
+        }*/
+
 /*        public string getName()
         {
             var user =_userManager.FindById(User.Identity.GetUserId());

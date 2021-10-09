@@ -76,7 +76,7 @@
                 @Html.DisplayFor(modelItem => item.DateTimeCreated)
             </td>
             <td>
-                @Html.ActionLink("Details", "ViewIssue", "Issue", new { issueID = item.IssueID }, null)
+                @Html.ActionLink("Details", "ViewIssue", "Issue", new { issueID = item.IssueID, cameFrom = "" + ViewBag.viewLocation}, null)
             </td>
 
             @*            <td>

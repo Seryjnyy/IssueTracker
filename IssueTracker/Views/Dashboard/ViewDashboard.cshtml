@@ -1,0 +1,240 @@
+﻿@model IssueTracker.Models.ViewModel.DashboardViewModel
+
+@{
+    ViewBag.Title = "ViewDashboard";
+}
+<link rel="stylesheet" type="text/css" href="~/Content/dashboard.css" />
+<h2>Dashboard</h2>
+
+<div class="chart-wrapper">
+    <div class="chart-container"><canvas id="chartPriority" width="250" height="150"></canvas></div>
+    <div class="chart-container"><canvas id="chartType" width="250" height="150"></canvas></div>
+    <div class="chart-container"><canvas id="chartStatus" width="250" height="150"></canvas></div>
+</div>
+
+
+@section Scripts{
+    <script>
+        var ctx = document.getElementById('chartPriority').getContext('2d');
+
+        var priorityCount = @Html.Raw(Json.Encode(Model.Priority.Count));
+        var priorityName = @Html.Raw(Json.Encode(Model.Priority.Name));
+
+        var typeCount = @Html.Raw(Json.Encode(Model.Type.Count));
+        var typeName = @Html.Raw(Json.Encode(Model.Type.Name));
+
+        var statusCount = @Html.Raw(Json.Encode(Model.Status.Count));
+        var statusName = @Html.Raw(Json.Encode(Model.Status.Name));
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: priorityName,
+                datasets: [{
+                    data: priorityCount,
+                    backgroundColor: [
+                        'rgba(239, 121, 138, 1)',
+                        'rgba(141, 181, 128, 1)',
+                        'rgba(255, 116, 119, 1)',
+                        'rgba(237, 238, 192, 1)'
+
+                    ],
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        text: "Issues by priority",
+                        display: true,   
+                        color: "#A6B5CA",
+                        font: {
+                            size: 18, 
+                            weight: "400",
+                            family: "Poppins"
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            }
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 0,
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            },
+
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 5,
+                            borderColor: "#A6B5CA"
+                        },
+
+                    },
+
+                }
+
+            }
+        });
+
+        ctx = document.getElementById('chartType').getContext('2d');
+        var myChart2 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: typeName,
+                datasets: [{
+                    data: typeCount,
+                    backgroundColor: [
+                        'rgba(255, 163, 118, 1)',
+                        'rgba(112, 211, 245, 1)',
+                        'rgba(249, 141, 189, 1)',
+                        'rgba(157, 247, 229, 1)',
+                        'rgba(226, 249, 252, 1)',
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        text: "Issues by type",
+                        display: true,
+                        color: "#A6B5CA",
+                        font: {
+                            size: 18,
+                            weight: "400",
+                            family: "Poppins"
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            }
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 0,
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            },
+
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 5,
+                            borderColor: "#A6B5CA"
+                        },
+
+                    },
+
+                }
+
+            }
+        });
+
+        ctx = document.getElementById('chartStatus').getContext('2d');
+        var myChart3 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: statusName,
+                datasets: [{
+                    data: statusCount,
+                    backgroundColor: [
+                        'rgba(147, 255, 150, 1)',
+                        'rgba(134, 231, 184, 1)',
+                        'rgba(153, 209, 156, 1)',
+                        'rgba(204, 245, 172, 1)'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        text: "Issues by status",
+                        display: true,
+                        color: "#A6B5CA",
+                        font: {
+                            size: 18,
+                            weight: "400",
+                            family: "Poppins"
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            }
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 0,
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: "#A6B5CA",
+                            font: {
+                                size: 14,
+                                weight: "500",
+                                family: "Poppins"
+                            },
+
+                        },
+                        grid: {
+                            display: false,
+                            borderWidth: 5,
+                            borderColor: "#A6B5CA"
+                        },
+
+                    },
+
+                }
+
+            }
+        });
+    </script>
+}

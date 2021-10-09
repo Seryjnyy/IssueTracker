@@ -1,12 +1,22 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    overflow-x: hidden;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
     padding-right: 15px;
+    padding-left: 200px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -22,3 +32,5 @@ select,
 textarea {
     max-width: 280px;
 }
+
+

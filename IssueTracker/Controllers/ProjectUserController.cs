@@ -44,6 +44,7 @@ namespace IssueTracker.Controllers
             string projectName = ProjectProcessor.GetProjectName(projectID);
             string notificationContent = string.Format("{0} has changed your role to {1}, in project: {2}.", (roleChanger.FirstName + " " + roleChanger.LastName), role, projectName);
 
+            // need to change namging of strUserID
             int recordsEdited = 0;
             foreach (var strUserID in projectUserIDs)
             {
@@ -59,10 +60,15 @@ namespace IssueTracker.Controllers
                 recordsEdited = + ProjectUserProcessor.EditProjectUserRole(userID, role);
 
                 // Create notification for user whos role got changed
-                NotificationProcessor.CreateNotification(strUserID, notificationContent);
+                string affectedUserID = ProjectUserProcessor.FindUserIdThrougProjectUserID(userID);
+                NotificationProcessor.CreateNotification(affectedUserID, notificationContent);
+
+                var affectedUser = userManager.FindById(affectedUserID);
+                string activityConntet = string.Format("{0} has changed users: {1} role to {2}, in project: {3}.", roleChanger.FirstName + " " + roleChanger.LastName, affectedUser.FirstName + " " +affectedUser.LastName, role, projectName);
+                ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), projectID, DateTime.Now, activityConntet);
             }
 
-            ActivityProcessor.CreateProjectActivity(User.Identity.GetUserId(), projectID, DateTime.Now, " edited user roles.");
+
 
             return RedirectToAction(
                 "ManageMembers", 
@@ -72,7 +78,7 @@ namespace IssueTracker.Controllers
                 });
         }
 
-        public ActionResult ManageMembers(int projectID,  string addUserMessage = "", string editUserMessage = "")
+        public ActionResult ManageMembers(int projectID,  string addUserMessage = "", string editUserMessage = "", string selectTab = "")
         {
             // only allow admin and creator
             string userRole = ProjectUserProcessor.FindUserRoleInProject(projectID, User.Identity.GetUserId());
@@ -86,6 +92,12 @@ namespace IssueTracker.Controllers
             if (editUserMessage != "")
                 ViewBag.editUserMessage = editUserMessage;
 
+            if (userRole == "Creator")
+                ViewBag.isCreator = true;
+
+            ViewBag.isManageMembers = "meh";
+            ViewBag.selectTab = selectTab;
+            ViewBag.projectName = ProjectProcessor.GetProjectName(projectID);
 
             return View();
         }
@@ -131,13 +143,27 @@ namespace IssueTracker.Controllers
         public JsonResult AllUserExceptAdminAndCreator(int projectID)
         {
             List<ProjectUserModel> users = AllUserEmailAndIDForProject(projectID);
+            bool isCreator = ProjectUserProcessor.FindUserRoleInProject(projectID, User.Identity.GetUserId()) == "Creator";
 
             for(int i = 0; i < users.Count(); i++)
             {
-                if(users[i].Role == "Admin" || users[i].Role == "Creator")
+                // if user is creator, then allow them to change role of admins
+                // if user not creator, then dont allow this
+                if (isCreator)
                 {
-                    users.RemoveAt(i);
+                    if (users[i].Role == "Creator")
+                    {
+                        users.RemoveAt(i);
+                    }
                 }
+                else
+                {
+                    if (users[i].Role == "Admin" || users[i].Role == "Creator")
+                    {
+                        users.RemoveAt(i);
+                    }
+                }
+
             }
 
             return Json(users, JsonRequestBehavior.AllowGet);

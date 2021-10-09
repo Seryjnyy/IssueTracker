@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace IssueTracker.Models
@@ -12,6 +13,8 @@ namespace IssueTracker.Models
         public int ProjectID { get; set; }
         public int IssueID { get; set; }
         public string Content { get; set; }
+
+        [DisplayName("Created")]
         public DateTime DateTimeCreated { get; set; }
 
     }

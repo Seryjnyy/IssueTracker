@@ -30,6 +30,14 @@ namespace IssueTrackerDataLibrary.BusinessLogic
             return SqlDataAccess.LoadData<ActivityModel>(sql);
         }
 
+        public static List<ActivityModel> ViewAllUserActivity(string userID)
+        {
+            string sql = string.Format("select ActivityContent, DateTimeCreated from dbo.IssueActivity where UserID = '{0}' "
+                                       + "union select ActivityContent, DateTimeCreated from dbo.ProjectActivity where UserID = '{0}' ORDER BY DateTimeCreated DESC;", userID);
+
+            return SqlDataAccess.LoadData<ActivityModel>(sql);
+        }
+
         public static int CreateIssueActivity(string userID, int issueID, DateTime dateTimeCreated, string activityContent)
         {
             string sql = @"insert into dbo.IssueActivity (UserID, IssueID, DateTimeCreated, ActivityContent) values (@UserID, @IssueID, @DateTimeCreated, @ActivityContent);";

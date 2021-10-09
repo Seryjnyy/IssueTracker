@@ -8,8 +8,6 @@
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>ProjectUserModel</h4>
-    <hr />
     @if (ViewBag.addUserMessage != null)
     {
 
@@ -25,7 +23,10 @@
             <select name="Role" class="form-control">
                 <option value="Developer">Developer</option>
                 <option value="Project Manager">Project Manager</option>
-                <option value="Admin">Admin</option>
+                @if (ViewBag.isCreator)
+                {
+                    <option value="Admin">Admin</option>
+                }
                 <option value="Submitter">Submitter</option>
             </select>
             @Html.ValidationMessageFor(model => model.Role, "", new { @class = "text-danger" })
