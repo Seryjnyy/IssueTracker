@@ -12,14 +12,7 @@ namespace IssueTracker.Controllers
     {
         public ActionResult Index()
         {
-            if (Session["UserFullName"] == null && User.Identity.IsAuthenticated)
-            {
-                ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                var user = userManager.FindById(User.Identity.GetUserId());
 
-                Session["UserFullName"] = user.FirstName + " " + user.LastName;
-                Session["UserEmail"] = user.Email;
-            }
 
             return View();
         }

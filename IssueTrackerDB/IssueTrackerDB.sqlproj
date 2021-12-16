@@ -64,6 +64,10 @@
     <Build Include="dbo\Tables\Issue.sql" />
     <Build Include="dbo\Tables\ProjectUser.sql" />
     <Build Include="dbo\Tables\Project.sql" />
+    <Build Include="dbo\Tables\Comment.sql" />
+    <Build Include="dbo\Tables\IssueActivity.sql" />
+    <Build Include="dbo\Tables\Notification.sql" />
+    <Build Include="dbo\Tables\ProjectActivity.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="IssueTrackerDB.refactorlog" />

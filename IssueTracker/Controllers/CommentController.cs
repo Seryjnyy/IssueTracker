@@ -114,8 +114,6 @@ namespace IssueTracker.Controllers
                     NotificationProcessor.CreateNotification(issueData.AuthorID, notificationContent);
                 }
 
-
-                return RedirectToAction("ViewIssue", "Issue", new {issueID = data.IssueID});
             }
 
             return RedirectToAction("ViewIssue", "Issue", new { issueID = data.IssueID });

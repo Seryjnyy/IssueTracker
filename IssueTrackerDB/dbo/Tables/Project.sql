@@ -1,8 +1,9 @@
-﻿CREATE TABLE [dbo].[Project]
-(
-	[ProjectId] INT NOT NULL PRIMARY KEY, 
-    [Name] NVARCHAR(50) NOT NULL, 
-    [Creator] NVARCHAR(128) NOT NULL, 
-    [Description] NCHAR(200) NOT NULL, 
-    [DateCreated] DATETIME NOT NULL
-)
+﻿CREATE TABLE [dbo].[Project] (
+    [ProjectId]       INT            IDENTITY (1, 1) NOT NULL,
+    [Name]            NVARCHAR (50)  NOT NULL,
+    [UserID]          NVARCHAR (128) NOT NULL,
+    [Description]     NVARCHAR (200) NOT NULL,
+    [DateTimeCreated] DATETIME       NOT NULL,
+    PRIMARY KEY CLUSTERED ([ProjectId] ASC)
+);
+

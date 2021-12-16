@@ -12,13 +12,7 @@ namespace IssueTrackerDataLibrary.BusinessLogic
         {
             string sql = @"insert into dbo.ProjectActivity (UserID, ProjectID, DateTimeCreated, ActivityContent) values (@UserID, @ProjectId, @DateTimeCreated, @ActivityContent);";
 
-            ActivityModel data = new ActivityModel
-            {
-                UserID = userID,
-                ProjectID = projectID,
-                DateTimeCreated = dateTimeCreated,
-                ActivityContent = activityContent
-            };
+            ActivityModel data = ConvertToModel(dateTimeCreated, activityContent, userID);
 
             return SqlDataAccess.SaveData(sql, data);
         }
@@ -42,13 +36,7 @@ namespace IssueTrackerDataLibrary.BusinessLogic
         {
             string sql = @"insert into dbo.IssueActivity (UserID, IssueID, DateTimeCreated, ActivityContent) values (@UserID, @IssueID, @DateTimeCreated, @ActivityContent);";
 
-            ActivityModel data = new ActivityModel
-            {
-                UserID = userID,
-                IssueID = issueID,
-                DateTimeCreated = dateTimeCreated,
-                ActivityContent = activityContent
-            };
+            ActivityModel data = ConvertToModel( dateTimeCreated, activityContent, userID, issueID);
 
             return SqlDataAccess.SaveData(sql, data);
         }
@@ -58,6 +46,17 @@ namespace IssueTrackerDataLibrary.BusinessLogic
             string sql = string.Format("select * from dbo.IssueActivity where IssueID = {0} ORDER BY DateTimeCreated DESC;", issueID);
             var data = SqlDataAccess.LoadData<ActivityModel>(sql);
             return data;
+        }
+
+        private static ActivityModel ConvertToModel(DateTime dateTimeCreated, string activityContent, string userID = "", int issueID = 0)
+        {
+            return new ActivityModel
+            {
+                UserID = userID,
+                IssueID = issueID,
+                DateTimeCreated = dateTimeCreated,
+                ActivityContent = activityContent
+            };
         }
     }
 }
